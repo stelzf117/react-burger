@@ -4,30 +4,39 @@ import styles from '../../styles/app-header.module.css'
 
 export default class AppHeader extends React.Component {
   state = {
-    type: {
-      constructor: 'primary',
-      orders: 'secondary',
-      login: 'secondary'
+    buttons: {
+      constructor: {
+        type: 'primary',
+      },
+      orders: {
+        type: 'secondary',
+      },
+      login: {
+        type: 'secondary',
+      }
     }
   }
   render() {
     const { header, wrapper, menu, item, logo } = styles;
-    console.log(this.state)
+    const constructor = this.state.buttons.constructor.type;
+    const orders = this.state.buttons.orders.type;
+    const login = this.state.buttons.login.type;
+
     return (
       <header className={header}>
            <div className={wrapper}>
              <ul className={menu}>
                <li className={item}>
-                 <Button type={'burger'} icon={<BurgerIcon type={this.state.type.constructor} />}>Конструктор</Button>
+                 <Button type={constructor} icon={<BurgerIcon type={constructor} />}>Конструктор</Button>
                 </li>
                 <li className={item}>
-                  <Button icon={<ListIcon type={this.state.type.orders} />}>Лента заказов</Button>
+                  <Button type={orders} icon={<ListIcon type={orders} />}>Лента заказов</Button>
                 </li>
               </ul>
              <div className={logo}>
               <Logo />
              </div>
-             <Button icon={<ProfileIcon type={this.state.type.login} />}>Личный кабинет</Button>
+             <Button type={login} icon={<ProfileIcon type={login} />}>Личный кабинет</Button>
            </div>
       </header>
     )
@@ -35,17 +44,15 @@ export default class AppHeader extends React.Component {
 }
 
 class Button extends React.Component {
-  state = {
-    type: "primary"
-  }
   render () {
-    const { button, text } = styles;
-    const { icon, children } = this.props;
+    const { button, inactive, text } = styles;
+    const { icon, children, type } = this.props;
+    const textClass = type === 'secondary' ? inactive : text;
 
     return (
       <button className={button}>
         {icon}
-        <p className={text}>
+        <p className={textClass}>
           {children}
         </p>
       </button>
