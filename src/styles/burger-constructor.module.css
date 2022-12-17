@@ -1,0 +1,64 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-bottom: 52px;
+}
+
+.inner {
+  composes: mt-25 from global;
+  list-style-type: none;
+  margin-bottom: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 550px;
+  overflow-y: scroll;
+}
+
+.inner::-webkit-scrollbar {
+  width: 8px;
+}
+
+.inner::-webkit-scrollbar-track {
+  background: #2F2F37;
+  margin: 100px 0;
+}
+
+.inner::-webkit-scrollbar-thumb {
+  background-color: #8585AD;
+}
+
+.item {
+  composes: ml-4 mr-4 mt-4 from global;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.item:first-child {
+  margin-top: 0;
+}
+
+.drag {
+  position: absolute;
+}
+
+.element {
+  composes: ml-8 from global;
+}
+
+.order {
+  display: flex;
+  composes: mr-4 mt-10 from global;
+}
+
+.total {
+  display: flex;
+  align-items: center;
+  composes: mr-10 from global;
+}
+
+.digits {
+  composes: mr-2 text text_type_digits-medium from global;
+}
