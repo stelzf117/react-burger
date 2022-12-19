@@ -5,22 +5,14 @@ import styles from '../../styles/app-header.module.css'
 export default class AppHeader extends React.Component {
   state = {
     buttons: {
-      constructor: {
-        type: 'primary',
-      },
-      orders: {
-        type: 'secondary',
-      },
-      login: {
-        type: 'secondary',
-      }
+      constructor: 'primary',
+      orders: 'secondary',
+      login: 'secondary',
     }
   }
   render() {
     const { header, wrapper, menu, item, logo } = styles;
-    const constructor = this.state.buttons.constructor.type;
-    const orders = this.state.buttons.orders.type;
-    const login = this.state.buttons.login.type;
+    const {constructor, orders, login} =  this.state.buttons;
 
     return (
       <header className={header}>

@@ -1,4 +1,4 @@
-export default function sortData(data) {
+export const sortData = data => {
   const criteria =  ['bun', 'sauce', 'main'];
   const result = {
     bun: {},

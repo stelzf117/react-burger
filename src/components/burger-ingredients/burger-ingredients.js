@@ -5,16 +5,12 @@ import styles from '../../styles/burger-ingredients.module.css';
 
 export default class BurgerIngridients extends React.Component {
   render() {
-    const { title, wrapper, ingredients } = styles;
+    const { title, wrapper } = styles;
     return (
       <section className={ wrapper }>
         <h2 className={title}>Соберите бургер</h2>
         <Tabs />
-        <ul className={ingredients}>
-          <Items {...this.props.bun} headline='Булки'></Items>
-          <Items {...this.props.sauce} headline='Соусы'></Items>
-          <Items {...this.props.main} headline='Начинки'></Items>
-        </ul>
+        <Items {...this.props} />
       </section>
     )
   }
@@ -33,33 +29,50 @@ class Tabs extends React.Component {
 }
 
 class Items extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      ingredients: {
+        bun: props.bun,
+        sauce: props.sauce,
+        main: props.main
+      },
+        headlines: ['Булочки', 'Соусы', 'Начинки']
+      }
+    }
+
   render() {
-    const data = this.props;
-    // console.log(data)
-    const { headline, items} = styles;
+    const { headline, items, ingredients} = styles;
+    const criteria = ["bun", "sauce", "main"];
     return(
-      <li>
-        <h3 className={headline}>{this.props.headline}</h3>
-        <ul className={items}>
-          {}
-        </ul>
-      </li>
+      <ul className={ingredients}>
+        {this.state.headlines.map((head, index) => (
+          <React.Fragment key={index}>
+            <h3 className={headline}>{head}</h3>
+            <ul className={items}>
+              {this.state.ingredients[criteria[index]].map((ingredient, i) => (
+                <Item key={`${ingredient._id}-${i}`} {...ingredient} />
+              ))}
+            </ul>
+          </React.Fragment>
+        ))}
+      </ul>
     )
   }
 }
 
 class Item extends React.Component {
   render() {
-    const { item, digits, image, textDigits, itemsDescription } = styles;
+    const { item, digits, img, textDigits, itemsDescription } = styles;
+    const { image, name, price } = this.props;
     return (
     <li className={item}>
-      <Counter count={1} size="default" />
-      <img className={image} src={this.props.image} alt={this.props.name} />
+      <img className={img} src={image} alt={name} />
       <div className={digits}>
-        <p className={textDigits}>20</p>
+        <p className={textDigits}>{price}</p>
         <CurrencyIcon />
       </div>
-      <p className={itemsDescription}>{this.props.name}</p>
+      <p className={itemsDescription}>{name}</p>
     </li>
     )
   }
