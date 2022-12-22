@@ -1,31 +1,120 @@
 .wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  min-width: 600px;
+  max-height: 100%;
   padding-bottom: 52px;
+  composes: pt-25 from global;
 }
 
 .inner {
+  max-height: 760px;
+  height: 100%;
+  width: 100%;
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.bun {
+  composes: mr-4 from global;
+}
+
+.items {
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+  overflow-y: scroll;
+  width: 100%;
+  height: 100%;
+  min-height: 176px;
+  list-style-type: none;
+  composes: mb-4 from global;
+}
+
+.items::-webkit-scrollbar {
+  width: 8px;
+}
+
+.items::-webkit-scrollbar-track {
+  background: #2F2F37;
+}
+
+.items::-webkit-scrollbar-thumb {
+  background-color: #8585AD;
+}
+
+.item {
+  padding: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  composes: mt-4 mr-2 from global;
+}
+
+.item:first-child {
+  margin-top: 0;
+}
+
+.element {
+  composes: ml-2 from global;
+}
+
+.order {
+  display: flex;
+  composes: mr-4 mt-10 from global;
+}
+
+.total {
+  display: flex;
+  align-items: center;
+  composes: mr-10 from global;
+}
+
+.digits {
+  composes: mr-2 text text_type_digits-medium from global;
+}
+
+
+
+
+
+
+
+
+/* .inner {
   composes: mt-25 from global;
   list-style-type: none;
+  max-height: 656px;
+  min-width: 600px;
   margin-bottom: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  height: 550px;
-  overflow-y: scroll;
 }
 
-.inner::-webkit-scrollbar {
+.items {
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
+  overflow-y: scroll;
+  max-height: 464px;
+  min-height: 160px;
+  composes: mt-4 from global;
+}
+
+.items::-webkit-scrollbar {
   width: 8px;
 }
 
-.inner::-webkit-scrollbar-track {
+.items::-webkit-scrollbar-track {
   background: #2F2F37;
-  margin: 100px 0;
 }
 
-.inner::-webkit-scrollbar-thumb {
+.items::-webkit-scrollbar-thumb {
   background-color: #8585AD;
 }
 
@@ -61,4 +150,4 @@
 
 .digits {
   composes: mr-2 text text_type_digits-medium from global;
-}
+} */

@@ -2,7 +2,9 @@
   composes: pt-10 mr-10 from global;
   max-width: 600px;
   width: 600px;
-
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .tabs {
@@ -17,7 +19,6 @@
 
 .ingredients {
   padding: 0;
-  height: 610px;
   list-style-type: none;
   margin-left: 0;
   margin-bottom: 0;

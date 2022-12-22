@@ -37,7 +37,7 @@ class Items extends React.Component {
         sauce: props.sauce,
         main: props.main
       },
-        headlines: ['Булочки', 'Соусы', 'Начинки']
+        headlines: ['Булки', 'Соусы', 'Начинки']
       }
     }
 

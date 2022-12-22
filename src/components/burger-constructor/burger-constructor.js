@@ -4,258 +4,109 @@ import itemImage from '../../images/item.png';
 import styles from '../../styles/burger-constructor.module.css'
 
 export default class BurgerConstructor extends React.Component {
+  state = {
+    buns: {
+      top: {
+        side: 'top',
+        text: 'Краторная булка N-200i (верх)',
+        price: 200,
+        image: itemImage
+      },
+      bottom: {
+        side: 'bottom',
+        text: 'Краторная булка N-200i (низ)',
+        price: 200,
+        image: itemImage
+      } 
+    }
+  }
   render() {
-    const { wrapper, inner, item, drag, element, order, total, digits, icon, button } = styles;
+    const { wrapper, inner } = styles;
     return(
-      <section className={wrapper}>
-        <ul className={inner}>
+     <secition className={wrapper}>
+      <div className={inner}>
+        <Bun {...this.state.buns.top} />
+        <Items />
+        <Bun {...this.state.buns.bottom} />
+        <Order total={50000} />
+      </div>
+     </secition>
+    )
+  }
+}
 
-          <li class={item}>
-            <div className={element}>
-              <ConstructorElement 
-                type="top"
-                isLocked={true}
-                text="Краторная булка N-200i (верх)"
-                price={200}
-                thumbnail={itemImage}
-              />
-            </div>
-          </li>
+class Bun extends React.Component {
+  render() {
+    const { bun } = styles;
+    return (
+      <div className={bun}>
+        <ConstructorElement
+        type={this.props.side}
+        isLocked={true}
+        text={this.props.text}
+        price={this.props.price}
+        thumbnail={this.props.image}
+        />
+      </div>
+    )
+  }
+}
 
-          <li class={item}>
-          <div className={drag}>
-            <DragIcon />
-          </div>
-          <div className={element}>
-            <ConstructorElement
-              isLocked={true}
-              text="Краторная булка N-200i (низ)"
-              price={200}
-              thumbnail={itemImage}
-            />
-          </div>
-           </li>
+class Items extends React.Component {
+  state = {
+    items: {}
+  }
+  addItem() {
+    this.setState(prevState => {
+      // items: [...prevState]
+    })
+  }
+  render() {
+    const { items } = styles;
+    return (
+      <ul className={items}>
+        <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
+        <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
+        <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
+        <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
+        <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
+        <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
+        <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
+      </ul>
+    )
+  }
+}
 
-           <li class={item}>
-          <div className={drag}>
-            <DragIcon />
-          </div>
-          <div className={element}>
-            <ConstructorElement
-              isLocked={true}
-              text="Краторная булка N-200i (низ)"
-              price={200}
-              thumbnail={itemImage}
-            />
-          </div>
-           </li>
-
-           <li class={item}>
-          <div className={drag}>
-            <DragIcon />
-          </div>
-          <div className={element}>
-            <ConstructorElement
-              isLocked={true}
-              text="Краторная булка N-200i (низ)"
-              price={200}
-              thumbnail={itemImage}
-            />
-          </div>
-           </li>
-
-           <li class={item}>
-          <div className={drag}>
-            <DragIcon />
-          </div>
-          <div className={element}>
-            <ConstructorElement
-              isLocked={true}
-              text="Краторная булка N-200i (низ)"
-              price={200}
-              thumbnail={itemImage}
-            />
-          </div>
-           </li>
-
-           <li class={item}>
-          <div className={drag}>
-            <DragIcon />
-          </div>
-          <div className={element}>
-            <ConstructorElement
-              isLocked={true}
-              text="Краторная булка N-200i (низ)"
-              price={200}
-              thumbnail={itemImage}
-            />
-          </div>
-           </li>
-
-           <li class={item}>
-          <div className={drag}>
-            <DragIcon />
-          </div>
-          <div className={element}>
-            <ConstructorElement
-              isLocked={true}
-              text="Краторная булка N-200i (низ)"
-              price={200}
-              thumbnail={itemImage}
-            />
-          </div>
-           </li>
-
-           <li class={item}>
-          <div className={drag}>
-            <DragIcon />
-          </div>
-          <div className={element}>
-            <ConstructorElement
-              isLocked={true}
-              text="Краторная булка N-200i (низ)"
-              price={200}
-              thumbnail={itemImage}
-            />
-          </div>
-           </li>
-
-           <li class={item}>
-          <div className={drag}>
-            <DragIcon />
-          </div>
-          <div className={element}>
-            <ConstructorElement
-              isLocked={true}
-              text="Краторная булка N-200i (низ)"
-              price={200}
-              thumbnail={itemImage}
-            />
-          </div>
-           </li>
-
-           <li class={item}>
-          <div className={drag}>
-            <DragIcon />
-          </div>
-          <div className={element}>
-            <ConstructorElement
-              isLocked={true}
-              text="Краторная булка N-200i (низ)"
-              price={200}
-              thumbnail={itemImage}
-            />
-          </div>
-           </li>
-
-           <li class={item}>
-          <div className={drag}>
-            <DragIcon />
-          </div>
-          <div className={element}>
-            <ConstructorElement
-              isLocked={true}
-              text="Краторная булка N-200i (низ)"
-              price={200}
-              thumbnail={itemImage}
-            />
-          </div>
-           </li>
-
-           <li class={item}>
-          <div className={drag}>
-            <DragIcon />
-          </div>
-          <div className={element}>
-            <ConstructorElement
-              isLocked={true}
-              text="Краторная булка N-200i (низ)"
-              price={200}
-              thumbnail={itemImage}
-            />
-          </div>
-           </li>
-
-           <li class={item}>
-          <div className={drag}>
-            <DragIcon />
-          </div>
-          <div className={element}>
-            <ConstructorElement
-              isLocked={true}
-              text="Краторная булка N-200i (низ)"
-              price={200}
-              thumbnail={itemImage}
-            />
-          </div>
-           </li>
-
-           <li class={item}>
-          <div className={drag}>
-            <DragIcon />
-          </div>
-          <div className={element}>
-            <ConstructorElement
-              isLocked={true}
-              text="Краторная булка N-200i (низ)"
-              price={200}
-              thumbnail={itemImage}
-            />
-          </div>
-           </li>
-
-           <li class={item}>
-          <div className={drag}>
-            <DragIcon />
-          </div>
-          <div className={element}>
-            <ConstructorElement
-              isLocked={true}
-              text="Краторная булка N-200i (низ)"
-              price={200}
-              thumbnail={itemImage}
-            />
-          </div>
-           </li>
-
-           <li class={item}>
-          <div className={drag}>
-            <DragIcon />
-          </div>
-          <div className={element}>
-            <ConstructorElement
-              isLocked={true}
-              text="Краторная булка N-200i (низ)"
-              price={200}
-              thumbnail={itemImage}
-            />
-          </div>
-           </li>
-
-          <li class={item}>
-          <div className={element}>
-            <ConstructorElement
-              type="bottom"
-              isLocked={true}
-              text="Краторная булка N-200i (низ)"
-              price={200}
-              thumbnail={itemImage}
-            />
-          </div>
-           </li>
-
-        </ul>
-
-        {/* order, total, digits, icon, button */}
-
-        <div className={order}>
-          <div className={total}>
-            <p className={digits}>610</p>
-            <CurrencyIcon />
-          </div>
-          <Button htmlType="button" type="primary" size="large">Оформить заказ</Button>
+class Item extends React.Component {
+  render() {
+    const { item, element } = styles;
+    return (
+      <li class={item}>
+          <DragIcon />
+        <div className={element}>
+          <ConstructorElement
+            text={this.props.text}
+            price={this.props.price}
+            thumbnail={this.props.image}
+          />
         </div>
-      </section>
+      </li>
+    )
+  }
+}
+
+
+class Order extends React.Component {
+  render() {
+    const { order, total, digits } = styles;
+    return(
+      <div className={order}>
+      <div className={total}>
+        <p className={digits}>{this.props.total}</p>
+        <CurrencyIcon />
+      </div>
+      <Button htmlType="button" type="primary" size="large">Оформить заказ</Button>
+    </div>
     )
   }
 }
