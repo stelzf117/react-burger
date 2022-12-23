@@ -21,7 +21,7 @@ class Tabs extends React.Component {
     current: 'one'
   }
   setCurrent = (cur) => {
-    this.setState({current: 'two'})
+    this.setState({current: cur})
   }
   render() {
     const current = this.state.current;
