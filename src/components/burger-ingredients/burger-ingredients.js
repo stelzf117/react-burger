@@ -17,12 +17,19 @@ export default class BurgerIngridients extends React.Component {
 }
 
 class Tabs extends React.Component {
+  state = {
+    current: 'one'
+  }
+  setCurrent = (cur) => {
+    this.setState({current: 'two'})
+  }
   render() {
+    const current = this.state.current;
     return (
       <div className={styles.tabs}>
-        <Tab value="one" active={this.current === 'one'} onClick={this.setCurrent}>Булки</Tab>
-        <Tab value="two" active={this.current === 'two'} onClick={this.setCurrent}>Соусы</Tab>
-        <Tab value="three" active={this.current === 'three'} onClick={this.setCurrent}>Начинки</Tab>
+        <Tab value="one" active={current === 'one'} onClick={this.setCurrent}>Булки</Tab>
+        <Tab value="two" active={current === 'two'} onClick={this.setCurrent}>Соусы</Tab>
+        <Tab value="three" active={current === 'three'} onClick={this.setCurrent}>Начинки</Tab>
       </div>
     )
   }

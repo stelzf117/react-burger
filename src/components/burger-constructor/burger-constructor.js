@@ -23,14 +23,14 @@ export default class BurgerConstructor extends React.Component {
   render() {
     const { wrapper, inner } = styles;
     return(
-     <secition className={wrapper}>
+     <section className={wrapper}>
       <div className={inner}>
         <Bun {...this.state.buns.top} />
         <Items />
         <Bun {...this.state.buns.bottom} />
         <Order total={50000} />
       </div>
-     </secition>
+     </section>
     )
   }
 }
@@ -81,7 +81,7 @@ class Item extends React.Component {
   render() {
     const { item, element } = styles;
     return (
-      <li class={item}>
+      <li className={item}>
           <DragIcon />
         <div className={element}>
           <ConstructorElement
