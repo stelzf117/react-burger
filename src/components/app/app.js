@@ -14,7 +14,7 @@ export default class App extends React.Component {
       <>
       <AppHeader />
       <main className={main}>
-        <BurgerIngridients {...readyData} />
+        <BurgerIngridients ingridients={readyData} />
         <BurgerConstructor />
       </main>
       </>

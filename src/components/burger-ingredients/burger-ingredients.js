@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../../styles/burger-ingredients.module.css';
 
@@ -10,10 +11,27 @@ export default class BurgerIngridients extends React.Component {
       <section className={ wrapper }>
         <h2 className={title}>Соберите бургер</h2>
         <Tabs />
-        <Items {...this.props} />
+        <Items {...this.props.ingridients} />
       </section>
     )
   }
+}
+
+// props check
+const ingridientsPropTypes = PropTypes.shape({
+  type: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
+  image: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  _id: PropTypes.string.isRequired
+}).isRequired
+
+BurgerIngridients.propTypes = {
+  ingridients: PropTypes.objectOf(
+    PropTypes.arrayOf(ingridientsPropTypes), 
+    PropTypes.arrayOf(ingridientsPropTypes), 
+    PropTypes.arrayOf(ingridientsPropTypes)
+    )
 }
 
 class Tabs extends React.Component {
