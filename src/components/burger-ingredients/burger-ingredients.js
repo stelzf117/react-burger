@@ -4,93 +4,69 @@ import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger
 import styles from '../../styles/burger-ingredients.module.css';
 
 
-export default class BurgerIngridients extends React.Component {
-  render() {
-    const { title, wrapper } = styles;
-    return (
-      <section className={ wrapper }>
-        <h2 className={title}>Соберите бургер</h2>
-        <Tabs />
-        <Items {...this.props.ingridients} />
-      </section>
-    )
-  }
-}
+const BurgerIngridients = React.memo(props => {
+  const { title, wrapper } = styles;
+  return (
+    <section className={ wrapper }>
+      <h2 className={title}>Соберите бургер</h2>
+      <Tabs />
+      <Items {...props.ingridients} />
+    </section>
+  )
+})
 
-// props check
-const ingridientsPropTypes = PropTypes.shape({
-  type: PropTypes.string.isRequired,
-  price: PropTypes.number.isRequired,
-  image: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  _id: PropTypes.string.isRequired
-}).isRequired
 
-BurgerIngridients.propTypes = {
-  ingridients: PropTypes.objectOf(
-    PropTypes.arrayOf(ingridientsPropTypes), 
-    PropTypes.arrayOf(ingridientsPropTypes), 
-    PropTypes.arrayOf(ingridientsPropTypes)
-    )
-}
+export default BurgerIngridients;
+//------------------------------
 
-class Tabs extends React.Component {
-  state = {
-    current: 'one'
-  }
-  setCurrent = (cur) => {
-    this.setState({current: cur})
-  }
-  render() {
-    const current = this.state.current;
-    return (
-      <div className={styles.tabs}>
-        <Tab value="one" active={current === 'one'} onClick={this.setCurrent}>Булки</Tab>
-        <Tab value="two" active={current === 'two'} onClick={this.setCurrent}>Соусы</Tab>
-        <Tab value="three" active={current === 'three'} onClick={this.setCurrent}>Начинки</Tab>
-      </div>
-    )
-  }
-}
 
-class Items extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      ingredients: {
-        bun: props.bun,
-        sauce: props.sauce,
-        main: props.main
-      },
-        headlines: ['Булки', 'Соусы', 'Начинки']
-      }
-    }
+const Tabs = React.memo(() => {
+  const [ state, setState ] = React.useState({ current: 'one' });
+  const current = state.current;
+  const setCurrent = cur => { setState({ current: cur }) };
+  return (
+    <div className={styles.tabs}>
+      <Tab value="one" active={current === 'one'} onClick={setCurrent}>Булки</Tab>
+      <Tab value="two" active={current === 'two'} onClick={setCurrent}>Соусы</Tab>
+      <Tab value="three" active={current === 'three'} onClick={setCurrent}>Начинки</Tab>
+    </div>
+  )
+})
 
-  render() {
-    const { headline, items, ingredients} = styles;
-    const criteria = ["bun", "sauce", "main"];
-    return(
-      <ul className={ingredients}>
-        {this.state.headlines.map((head, index) => (
-          <React.Fragment key={index}>
-            <h3 className={headline}>{head}</h3>
-            <ul className={items}>
-              {this.state.ingredients[criteria[index]].map((ingredient, i) => (
-                <Item key={`${ingredient._id}-${i}`} {...ingredient} />
-              ))}
-            </ul>
-          </React.Fragment>
-        ))}
-      </ul>
-    )
-  }
-}
 
-class Item extends React.Component {
-  render() {
-    const { item, digits, img, textDigits, itemsDescription } = styles;
-    const { image, name, price } = this.props;
-    return (
+const Items = React.memo(props => {
+  const [ state, setState ] = React.useState({
+    ingredients: {
+      bun: props.bun,
+      sauce: props.sauce,
+      main: props.main
+    },
+    headlines: ['Булки', 'Соусы', 'Начинки']
+  });
+  const criteria = ["bun", "sauce", "main"];
+  const { headline, items, ingredients} = styles;
+
+
+  return(
+    <ul className={ingredients}>
+      {state.headlines.map((head, index) => (
+        <React.Fragment key={index}>
+          <h3 className={headline}>{head}</h3>
+          <ul className={items}>
+            {state.ingredients[criteria[index]].map((ingredient, i) => (
+              <Item key={`${ingredient._id}-${i}`} {...ingredient} />
+            ))}
+          </ul>
+        </React.Fragment>
+      ))}
+    </ul>
+  )
+})
+
+
+const Item = React.memo(({ image, name, price }) => {
+  const { item, digits, img, textDigits, itemsDescription } = styles;
+  return (
     <li className={item}>
       <img className={img} src={image} alt={name} />
       <div className={digits}>
@@ -100,5 +76,4 @@ class Item extends React.Component {
       <p className={itemsDescription}>{name}</p>
     </li>
     )
-  }
-}
+})

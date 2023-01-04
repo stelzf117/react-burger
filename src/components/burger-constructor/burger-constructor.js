@@ -3,8 +3,8 @@ import { DragIcon, ConstructorElement, CurrencyIcon, Button } from '@ya.praktiku
 import itemImage from '../../images/item.png';
 import styles from '../../styles/burger-constructor.module.css'
 
-export default class BurgerConstructor extends React.Component {
-  state = {
+const BurgerConstructor = React.memo(props => {
+  const [ state, setState ] = React.useState({
     buns: {
       top: {
         side: 'top',
@@ -19,94 +19,80 @@ export default class BurgerConstructor extends React.Component {
         image: itemImage
       } 
     }
-  }
-  render() {
-    const { wrapper, inner } = styles;
-    return(
-     <section className={wrapper}>
-      <div className={inner}>
-        <Bun {...this.state.buns.top} />
-        <Items />
-        <Bun {...this.state.buns.bottom} />
-        <Order total={50000} />
+  })
+  const { wrapper, inner } = styles;
+
+  return (
+    <section className={wrapper}>
+     <div className={inner}>
+       <Bun {...state.buns.top} />
+       <Items />
+       <Bun {...state.buns.bottom} />
+       <Order total={50000} />
+     </div>
+    </section>
+  )
+})
+
+export default BurgerConstructor;
+// ------------------------------
+
+const Bun = React.memo(({ side, text, price, image }) => {
+  const { bun } = styles;
+  return (
+    <div className={ bun }>
+      <ConstructorElement
+      type={side}
+      isLocked={true}
+      text={text}
+      price={price}
+      thumbnail={image}
+      />
+    </div>
+  )
+})
+
+const Items = React.memo(() => {
+  const [ state, setState ] = React.useState({items: {}})
+  const { items } = styles;
+  return(
+    <ul className={items}>
+      <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
+      <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
+      <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
+      <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
+      <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
+      <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
+      <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
+  </ul>
+  )
+})
+
+const Item = React.memo(({ text, price, image }) => {
+  const { item, element } = styles;
+  return (
+    <li className={item}>
+    <DragIcon />
+      <div className={element}>
+      <ConstructorElement
+      text={text}
+      price={price}
+      thumbnail={image}
+      />
       </div>
-     </section>
-    )
-  }
-}
+    </li>
+  )
+})
 
-class Bun extends React.Component {
-  render() {
-    const { bun } = styles;
-    return (
-      <div className={bun}>
-        <ConstructorElement
-        type={this.props.side}
-        isLocked={true}
-        text={this.props.text}
-        price={this.props.price}
-        thumbnail={this.props.image}
-        />
-      </div>
-    )
-  }
-}
-
-class Items extends React.Component {
-  state = {
-    items: {}
-  }
-  addItem() {
-    this.setState(prevState => {
-      // items: [...prevState]
-    })
-  }
-  render() {
-    const { items } = styles;
-    return (
-      <ul className={items}>
-        <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
-        <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
-        <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
-        <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
-        <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
-        <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
-        <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
-      </ul>
-    )
-  }
-}
-
-class Item extends React.Component {
-  render() {
-    const { item, element } = styles;
-    return (
-      <li className={item}>
-          <DragIcon />
-        <div className={element}>
-          <ConstructorElement
-            text={this.props.text}
-            price={this.props.price}
-            thumbnail={this.props.image}
-          />
-        </div>
-      </li>
-    )
-  }
-}
-
-
-class Order extends React.Component {
-  render() {
-    const { order, total, digits } = styles;
-    return(
-      <div className={order}>
+const Order = React.memo(props => {
+  const { order, total, digits } = styles;
+  return (
+    <div className={order}>
       <div className={total}>
-        <p className={digits}>{this.props.total}</p>
+        <p className={digits}>{props.total}</p>
         <CurrencyIcon />
       </div>
       <Button htmlType="button" type="primary" size="large">Оформить заказ</Button>
     </div>
-    )
-  }
-}
+  )
+})
