@@ -4,18 +4,43 @@ import BurgerIngridients from '../burger-ingredients/burger-ingredients.js';
 import BurgerConstructor from '../burger-constructor/burger-constructor.js';
 import styles from '../../styles/app.module.css'
 import { sortData } from '../../utils/sort-data.js';
-import { data } from '../../utils/data.js';
 
 const App = React.memo(() => {
+  const [ state, setState ] = React.useState({
+    isLoading: false,
+    hasError: false,
+    data: []
+  })
+
+  React.useEffect(() => {
+    const getData = async() => {
+      setState({...state, isLoading: true});
+      const url = 'https://norma.nomoreparties.space/api/ingredients';
+      const res = await fetch(url);
+      const data = await res.json();
+      data.success ? setState({ ...state,isLoading: false, data: data.data }) : setState({ hasError: true });
+    }
+    getData()
+  },
+    [ ]
+  )
+
   const { main } = styles;
-  const readyData = sortData(data);
   return (
     <>
-    <AppHeader />
-    <main className={main}>
-      <BurgerIngridients ingridients={readyData} />
-      <BurgerConstructor />
-    </main>
+      { state.hasError && 'произошла ошибка' }
+      {
+        !state.isLoading &&
+        !state.hasError &&
+        state.data.length &&
+        <>
+          <AppHeader />
+          <main className={main}>
+            <BurgerIngridients ingridients={sortData(state.data)} />
+            <BurgerConstructor />
+          </main>
+        </>
+      }
     </>
   )
 })
