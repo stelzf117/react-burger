@@ -65,23 +65,28 @@ const Items = React.memo(props => {
 })
 
 
-const Item = React.memo(({ image, name, price }) => {
+const Item = React.memo(props => {
+  const { image, name, price } = props;
   const [ state, setState ] = React.useState({ popupVisible: false});
   const popupClose = () => { setState({ popupVisible: false })};
   const popupOpen = () => { setState({ popupVisible: true })};
   const { item, digits, img, textDigits, itemsDescription } = styles;
   return (
     <>
-      <li className={item} onClick={ popupOpen }>
-        <img className={img} src={image} alt={name} />
-        <div className={digits}>
-          <p className={textDigits}>{price}</p>
+      <li className={ item } onClick={ popupOpen }>
+        <img className={ img } src={ image } alt={ name } />
+        <div className={ digits }>
+          <p className={ textDigits }>{ price }</p>
           <CurrencyIcon />
         </div>
-        <p className={itemsDescription}>{name}</p>
+        <p className={ itemsDescription }>{ name }</p>
       </li>
       {/* {portal} */}
-      {state.popupVisible && <Modal popupClose={ popupClose } />}
+      {state.popupVisible && <Modal
+        popupClose={ popupClose } 
+        popup='ingredient'
+        { ...props } 
+      />}
     </>
     )
 })
