@@ -2,6 +2,7 @@ import React from 'react';
 import { DragIcon, ConstructorElement, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import itemImage from '../../images/item.png';
 import styles from '../../styles/burger-constructor.module.css'
+import Modal from '../modal/modal';
 
 const BurgerConstructor = React.memo(props => {
   const [ state, setState ] = React.useState({
@@ -52,6 +53,7 @@ const Bun = React.memo(({ side, text, price, image }) => {
   )
 })
 
+
 const Items = React.memo(() => {
   const [ state, setState ] = React.useState({items: {}})
   const { items } = styles;
@@ -84,15 +86,24 @@ const Item = React.memo(({ text, price, image }) => {
   )
 })
 
-const Order = React.memo(props => {
-  const { order, total, digits } = styles;
+
+
+const Order = React.memo(({ total }) => {
+  const [ state, setState ] = React.useState({ popupVisible: false});
+  const popupClose = () => { setState({ popupVisible: false })};
+  const popupOpen = () => { setState({ popupVisible: true })};
+  const { order, total1, digits } = styles;
   return (
-    <div className={order}>
-      <div className={total}>
-        <p className={digits}>{props.total}</p>
-        <CurrencyIcon />
+    <>
+      <div className={order}>
+        <div className={total1}>
+          <p className={digits}>{total}</p>
+          <CurrencyIcon />
+        </div>
+        <Button onClick={ popupOpen } htmlType="button" type="primary" size="large">Оформить заказ</Button>
       </div>
-      <Button htmlType="button" type="primary" size="large">Оформить заказ</Button>
-    </div>
+      {/* {portal} */}
+      {state.popupVisible && <Modal popupClose={ popupClose } />}
+    </>
   )
 })

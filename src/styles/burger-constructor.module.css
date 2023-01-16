@@ -64,7 +64,7 @@
   composes: mr-4 mt-10 from global;
 }
 
-.total {
+.total1 {
   display: flex;
   align-items: center;
   composes: mr-10 from global;

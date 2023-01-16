@@ -5,6 +5,7 @@ import BurgerConstructor from '../burger-constructor/burger-constructor.js';
 import styles from '../../styles/app.module.css'
 import { sortData } from '../../utils/sort-data.js';
 
+
 const App = React.memo(() => {
   const [ state, setState ] = React.useState({
     isLoading: false,
@@ -18,7 +19,7 @@ const App = React.memo(() => {
       const url = 'https://norma.nomoreparties.space/api/ingredients';
       const res = await fetch(url);
       const data = await res.json();
-      data.success ? setState({ ...state,isLoading: false, data: data.data }) : setState({ hasError: true });
+      data.success ? setState({ ...state,isLoading: false, data: data.data }) : setState({ isLoading: false, hasError: true });
     }
     getData()
   },

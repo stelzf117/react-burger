@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../../styles/burger-ingredients.module.css';
+import Modal from '../modal/modal';
 
 
 const BurgerIngridients = React.memo(props => {
@@ -44,17 +45,17 @@ const Items = React.memo(props => {
     headlines: ['Булки', 'Соусы', 'Начинки']
   });
   const criteria = ["bun", "sauce", "main"];
-  const { headline, items, ingredients} = styles;
+  const { headline, items, ingredients } = styles;
 
 
   return(
-    <ul className={ingredients}>
-      {state.headlines.map((head, index) => (
-        <React.Fragment key={index}>
-          <h3 className={headline}>{head}</h3>
-          <ul className={items}>
+    <ul className={ ingredients}>
+      {state.headlines.map(( head, index ) => (
+        <React.Fragment key={ index }>
+          <h3 className={ headline }>{ head }</h3>
+          <ul className={ items }>
             {state.ingredients[criteria[index]].map((ingredient, i) => (
-              <Item key={`${ingredient._id}-${i}`} {...ingredient} />
+              <Item key={`${ ingredient._id} -${i}`} { ...ingredient } />
             ))}
           </ul>
         </React.Fragment>
@@ -65,15 +66,22 @@ const Items = React.memo(props => {
 
 
 const Item = React.memo(({ image, name, price }) => {
+  const [ state, setState ] = React.useState({ popupVisible: false});
+  const popupClose = () => { setState({ popupVisible: false })};
+  const popupOpen = () => { setState({ popupVisible: true })};
   const { item, digits, img, textDigits, itemsDescription } = styles;
   return (
-    <li className={item}>
-      <img className={img} src={image} alt={name} />
-      <div className={digits}>
-        <p className={textDigits}>{price}</p>
-        <CurrencyIcon />
-      </div>
-      <p className={itemsDescription}>{name}</p>
-    </li>
+    <>
+      <li className={item} onClick={ popupOpen }>
+        <img className={img} src={image} alt={name} />
+        <div className={digits}>
+          <p className={textDigits}>{price}</p>
+          <CurrencyIcon />
+        </div>
+        <p className={itemsDescription}>{name}</p>
+      </li>
+      {/* {portal} */}
+      {state.popupVisible && <Modal popupClose={ popupClose } />}
+    </>
     )
 })
