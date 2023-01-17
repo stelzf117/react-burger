@@ -1,5 +1,19 @@
 .inner {
-  
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  composes: mt-30 mb-30 from global;
+}
+
+.close {
+  position: absolute;
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  right: 0;
+  composes: mt-15 mr-10 from global;
 }
 
 
