@@ -4,6 +4,7 @@ import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../../styles/modal.module.css'
 import ModalOverlay from '../modal-overlay/modal-overlay.js';
 import OrderDetails from '../order-details/order-details';
+import IngredientDetails from '../ingredient-details/ingredient-details';
 import PropTypes from 'prop-types';
 
 const modalRoot = document.getElementById('react-modals');
@@ -25,16 +26,12 @@ const Modal = React.memo( props => {
     <>
       
       <div className={ wrapper }>
-        <button className={ close } onClick={ popupClose } >
-          <CloseIcon type="primary" />
-        </button>
-        <div className={ inner }>
-          { props.popup === 'ingredient' ? 
-          'ingredient' 
-          : (
-            <OrderDetails />
-          )}
-        </div>
+          { 
+            props.popup === 'ingredient' ?
+            (<IngredientDetails popupClose={ popupClose } {...props} />) 
+            : 
+            (<OrderDetails popupClose={ popupClose } />)
+          }
       </div>
       <ModalOverlay onClick={ popupClose } />
       

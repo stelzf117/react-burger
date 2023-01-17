@@ -2,27 +2,18 @@
   position: absolute;
   z-index: 2;
   width: 720px;
-  height: 720px;
   border-radius: 40px;
   background-color: #1C1C21;
   display: flex;
   flex-direction: column;
+  /* center position */
   top: 50%; left: 50%;
 	-webkit-transform: translate(-50%,-50%);
     -ms-transform: translate(-50%,-50%);
         transform: translate(-50%,-50%);
 }
 
-.inner {
-  width: 520px;
-  align-self: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  composes: mt-30 mb-30 from global;
-}
-
-.close {
+/* .close {
   position: absolute;
   align-self: flex-end;
   background-color: transparent;
@@ -30,4 +21,4 @@
   border: none;
   cursor: pointer;
   composes: mr-10 mt-15 from global;
-}
+} */

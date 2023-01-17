@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../../styles/burger-ingredients.module.css';
@@ -49,7 +49,7 @@ const Items = React.memo(props => {
 
 
   return(
-    <ul className={ ingredients}>
+    <ul className={ ingredients }>
       {state.headlines.map(( head, index ) => (
         <React.Fragment key={ index }>
           <h3 className={ headline }>{ head }</h3>
@@ -67,7 +67,7 @@ const Items = React.memo(props => {
 
 const Item = React.memo(props => {
   const { image, name, price } = props;
-  const [ state, setState ] = React.useState({ popupVisible: false});
+  const [ state, setState ] = React.useState({ popupVisible: false });
   const popupClose = () => { setState({ popupVisible: false })};
   const popupOpen = () => { setState({ popupVisible: true })};
   const { item, digits, img, textDigits, itemsDescription } = styles;
