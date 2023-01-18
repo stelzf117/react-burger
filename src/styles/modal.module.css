@@ -12,13 +12,3 @@
     -ms-transform: translate(-50%,-50%);
         transform: translate(-50%,-50%);
 }
-
-/* .close {
-  position: absolute;
-  align-self: flex-end;
-  background-color: transparent;
-  padding: 0;
-  border: none;
-  cursor: pointer;
-  composes: mr-10 mt-15 from global;
-} */

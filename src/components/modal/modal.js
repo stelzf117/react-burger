@@ -13,7 +13,6 @@ const Modal = React.memo( props => {
   const { popupClose } = props; 
   const handleCloseEsc = e => { if(e.key === 'Escape') {popupClose()} };
   React.useEffect(() => {
-    console.log(props)
     document.addEventListener('keydown', handleCloseEsc);
     return () => {
       document.removeEventListener('keydown', handleCloseEsc);

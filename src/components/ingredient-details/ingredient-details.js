@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../../styles/ingredient-details.module.css'
 
@@ -32,5 +33,17 @@ const IngredientDetails = React.memo( ({ popupClose, image_large, name, calories
     </div>
   )
 })
+
+IngredientDetails.PropTypes = PropTypes.shape({
+  popupClose: PropTypes.func,
+  image_large: PropTypes.string,
+  name: PropTypes.string,
+  calories: PropTypes.string,
+  carbohydrates: PropTypes.string,
+  proteins: PropTypes.string,
+  fat: PropTypes.string
+})
+
+
 
 export default IngredientDetails;

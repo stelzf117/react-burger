@@ -1,10 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { DragIcon, ConstructorElement, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import itemImage from '../../images/item.png';
 import styles from '../../styles/burger-constructor.module.css'
 import Modal from '../modal/modal';
 
-const BurgerConstructor = React.memo(props => {
+const BurgerConstructor = React.memo( props => {
   const [ state, setState ] = React.useState({
     buns: {
       top: {
@@ -35,6 +36,23 @@ const BurgerConstructor = React.memo(props => {
   )
 })
 
+BurgerConstructor.propTypes = {
+  buns: PropTypes.shape({
+    top: PropTypes.shape({
+      side: PropTypes.string,
+      text: PropTypes.string,
+      price: PropTypes.number,
+      image: PropTypes.string,
+    }),
+    bottom: PropTypes.shape({
+      side: PropTypes.string,
+      text: PropTypes.string,
+      price: PropTypes.number,
+      image: PropTypes.string,
+    })
+  })
+}
+
 export default BurgerConstructor;
 // ------------------------------
 
@@ -53,19 +71,25 @@ const Bun = React.memo(({ side, text, price, image }) => {
   )
 })
 
+Bun.propTypes = {
+  side: PropTypes.string,
+  text: PropTypes.string,
+  price: PropTypes.number,
+  image: PropTypes.string
+}
 
 const Items = React.memo(() => {
   const [ state, setState ] = React.useState({items: {}})
   const { items } = styles;
   return(
     <ul className={items}>
-      <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
-      <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
-      <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
-      <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
-      <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
-      <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
-      <Item text='Мясо бессмертных моллюсков Protostomia' price={1337} image={'https://code.s3.yandex.net/react/code/meat-02.png'} />
+      <Item text='Мясо бессмертных моллюсков Protostomia' price={ 1337 } image={ 'https://code.s3.yandex.net/react/code/meat-02.png' } />
+      <Item text='Мясо бессмертных моллюсков Protostomia' price={ 1337 } image={ 'https://code.s3.yandex.net/react/code/meat-02.png' } />
+      <Item text='Мясо бессмертных моллюсков Protostomia' price={ 1337 } image={ 'https://code.s3.yandex.net/react/code/meat-02.png' } />
+      <Item text='Мясо бессмертных моллюсков Protostomia' price={ 1337 } image={ 'https://code.s3.yandex.net/react/code/meat-02.png' } />
+      <Item text='Мясо бессмертных моллюсков Protostomia' price={ 1337 } image={ 'https://code.s3.yandex.net/react/code/meat-02.png' } />
+      <Item text='Мясо бессмертных моллюсков Protostomia' price={ 1337 } image={ 'https://code.s3.yandex.net/react/code/meat-02.png' } />
+      <Item text='Мясо бессмертных моллюсков Protostomia' price={ 1337 } image={ 'https://code.s3.yandex.net/react/code/meat-02.png' } />
   </ul>
   )
 })
@@ -87,7 +111,6 @@ const Item = React.memo(({ text, price, image }) => {
 })
 
 
-
 const Order = React.memo(({ total }) => {
   const [ state, setState ] = React.useState({ popupVisible: false});
   const popupClose = () => { setState({ popupVisible: false })};
@@ -107,3 +130,7 @@ const Order = React.memo(({ total }) => {
     </>
   )
 })
+
+Order.PropTypes = {
+  total: PropTypes.number
+}

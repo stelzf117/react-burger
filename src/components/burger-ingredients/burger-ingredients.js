@@ -4,7 +4,6 @@ import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger
 import styles from '../../styles/burger-ingredients.module.css';
 import Modal from '../modal/modal';
 
-
 const BurgerIngridients = React.memo(props => {
   const { title, wrapper } = styles;
   return (
@@ -15,6 +14,14 @@ const BurgerIngridients = React.memo(props => {
     </section>
   )
 })
+
+BurgerIngridients.propTypes = {
+  ingridients: PropTypes.shape({
+    bun: PropTypes.arrayOf(PropTypes.object),
+    main: PropTypes.arrayOf(PropTypes.object),
+    sauce: PropTypes.arrayOf(PropTypes.object)
+  })
+};
 
 
 export default BurgerIngridients;
@@ -35,7 +42,7 @@ const Tabs = React.memo(() => {
 })
 
 
-const Items = React.memo(props => {
+const Items = React.memo( props => {
   const [ state, setState ] = React.useState({
     ingredients: {
       bun: props.bun,
@@ -64,8 +71,14 @@ const Items = React.memo(props => {
   )
 })
 
+Items.propTypes = {
+    bun: PropTypes.arrayOf(PropTypes.object),
+    main: PropTypes.arrayOf(PropTypes.object),
+    sauce: PropTypes.arrayOf(PropTypes.object)
+};
 
-const Item = React.memo(props => {
+
+const Item = React.memo( props => {
   const { image, name, price } = props;
   const [ state, setState ] = React.useState({ popupVisible: false });
   const popupClose = () => { setState({ popupVisible: false })};
@@ -90,3 +103,9 @@ const Item = React.memo(props => {
     </>
     )
 })
+
+Item.propTypes = {
+  image: PropTypes.string, 
+  name: PropTypes.string, 
+  price: PropTypes.number
+};

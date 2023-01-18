@@ -96,33 +96,3 @@
 .itemsDescription {
   composes: text text_type_main-default mt-2 from global;
 }
-
-
-/*
-.button {
-  box-sizing: border-box;
-  border: none;
-  cursor: pointer;
-  margin: 0;
-  background-color: transparent;
-  color: #F2F2F3;
-  padding: 16px 76px;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-.block {
-  composes: mt-10 pb-10  from global;
-  list-style-type: none;
-  margin-bottom: 0;
-  padding-left: 0;
-} */
