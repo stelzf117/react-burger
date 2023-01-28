@@ -7,7 +7,6 @@
 * HTML5
 * CSS3
 * flexbox 
-* БЭМ-Nested
 * Grid
 * React
 * WebPack
