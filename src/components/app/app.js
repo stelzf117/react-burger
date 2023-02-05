@@ -12,16 +12,28 @@ const App = React.memo(() => {
     hasError: false,
     data: []
   })
-
   React.useEffect(() => {
+
     const getData = async() => {
       setState({...state, isLoading: true});
       const url = 'https://norma.nomoreparties.space/api/ingredients';
-      const res = await fetch(url);
-      const data = await res.json();
-      data.success ? setState({ ...state,isLoading: false, data: data.data }) : setState({ isLoading: false, hasError: true });
+      const res = await fetch(url)
+        .then(respond => {
+          if (respond.ok) {
+            return respond.json();
+          }
+          else { Promise.reject(`Ошибка: ${res.status}`) }
+        })
+        .then(object => {
+          setState({ ...state, isLoading: false, data: object.data })
+        })
+        .catch(e => {
+          console.log(e);
+          setState({ isLoading: false, hasError: true });
+        })
     }
     getData()
+
   },
     [ ]
   )
