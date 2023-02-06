@@ -79,17 +79,26 @@ Bun.propTypes = {
 }
 
 const Items = React.memo(() => {
-  const [ state, setState ] = React.useState({items: {}})
+  const [ state, setState ] = React.useState({
+    items: [
+            {text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png'},
+            {text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png'},
+            {text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png'},
+            {text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png'},
+            {text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png'},
+            {text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png'},
+            {text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png'},
+           ]
+  })
   const { items } = styles;
   return(
     <ul className={items}>
-      <Item text='Мясо бессмертных моллюсков Protostomia' price={ 1337 } image={ 'https://code.s3.yandex.net/react/code/meat-02.png' } />
-      <Item text='Мясо бессмертных моллюсков Protostomia' price={ 1337 } image={ 'https://code.s3.yandex.net/react/code/meat-02.png' } />
-      <Item text='Мясо бессмертных моллюсков Protostomia' price={ 1337 } image={ 'https://code.s3.yandex.net/react/code/meat-02.png' } />
-      <Item text='Мясо бессмертных моллюсков Protostomia' price={ 1337 } image={ 'https://code.s3.yandex.net/react/code/meat-02.png' } />
-      <Item text='Мясо бессмертных моллюсков Protostomia' price={ 1337 } image={ 'https://code.s3.yandex.net/react/code/meat-02.png' } />
-      <Item text='Мясо бессмертных моллюсков Protostomia' price={ 1337 } image={ 'https://code.s3.yandex.net/react/code/meat-02.png' } />
-      <Item text='Мясо бессмертных моллюсков Protostomia' price={ 1337 } image={ 'https://code.s3.yandex.net/react/code/meat-02.png' } />
+      {state.items.map(( item, index ) => (
+        <Item key={`${index}`}
+        text={ item.text } 
+        price={ item.price } 
+        image={ item.image } />
+      ))}
   </ul>
   )
 })
