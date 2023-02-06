@@ -1,20 +1,16 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../../styles/ingredient-details.module.css'
 
-const IngredientDetails = React.memo( ({ popupClose, image_large, name, calories, carbohydrates, proteins, fat }) => {
-  const { title, inner, header, img, description, list, item, span, close } = styles;
+const IngredientDetails = React.memo( ({ image_large, name, calories, carbohydrates, proteins, fat }) => {
+  const { title, inner, header, img, description, list, item, span } = styles;
   return (
     <div className={ inner }>
       <div className={ header }>
         <p className={ title }>Детали ингредиента</p>
-        <button className={ close } onClick={ popupClose } >
-          <CloseIcon type="primary" />
-        </button> 
       </div>
 
-      <img className={ img } src={ image_large } alt="" />
+      <img className={ img } src={ image_large } alt={ name } />
       <p className={ description }>{ name }</p>
       <ul className={ list }>
         <li className={ item }>Калории,ккал
@@ -35,7 +31,6 @@ const IngredientDetails = React.memo( ({ popupClose, image_large, name, calories
 })
 
 IngredientDetails.PropTypes = PropTypes.shape({
-  popupClose: PropTypes.func,
   image_large: PropTypes.string,
   name: PropTypes.string,
   calories: PropTypes.string,
