@@ -3,14 +3,42 @@ import PropTypes from 'prop-types';
 import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../../styles/burger-ingredients.module.css';
 import Modal from '../modal/modal';
+import IngredientDetails from '../ingredient-details/ingredient-details';
 
-const BurgerIngridients = React.memo(props => {
+
+const BurgerIngridients = React.memo( props => {
+  const [ state, setState ] = React.useState({ popupVisible: false });
+  const popupClose = () => setState({ popupVisible: false });
+  const popupOpen = ingredient => setState(() => {
+    return { 
+      currentIngredient: {
+        name: ingredient.name,
+        image_large: ingredient.image_large,
+        fat: ingredient.fat,
+        proteins: ingredient.proteins,
+        calories: ingredient.calories,
+        carbohydrates: ingredient.carbohydrates
+      }, 
+      popupVisible: true }
+  });
   const { title, wrapper } = styles;
+
+
   return (
     <section className={ wrapper }>
       <h2 className={title}>Соберите бургер</h2>
       <Tabs />
-      <Items {...props.ingridients} />
+      <Items {...props.ingridients} popupOpen={ popupOpen } />
+
+      {/* { portal } */}
+        {state.popupVisible &&
+        <Modal 
+          title='Детали ингредиента'
+          onClose={ popupClose }
+        >
+          <IngredientDetails currentIngredient={ state.currentIngredient } />
+        </Modal>}
+      {/* { portal } */}
     </section>
   )
 })
@@ -22,7 +50,6 @@ BurgerIngridients.propTypes = {
     sauce: PropTypes.arrayOf(PropTypes.object)
   })
 };
-
 
 export default BurgerIngridients;
 //------------------------------
@@ -55,14 +82,17 @@ const Items = React.memo( props => {
   const { headline, items, ingredients } = styles;
 
 
-  return(
+  return (
     <ul className={ ingredients }>
       {state.headlines.map(( head, index ) => (
         <React.Fragment key={ index }>
           <h3 className={ headline }>{ head }</h3>
           <ul className={ items }>
             {state.ingredients[criteria[index]].map((ingredient, i) => (
-              <Item key={`${ ingredient._id} -${i}`} { ...ingredient } />
+              <Item key={`${ ingredient._id}`}
+              popupOpen={ props.popupOpen }
+              { ...ingredient }
+               />
             ))}
           </ul>
         </React.Fragment>
@@ -79,29 +109,18 @@ Items.propTypes = {
 
 
 const Item = React.memo( props => {
-  const { image, name, price } = props;
-  const [ state, setState ] = React.useState({ popupVisible: false });
-  const popupClose = () => { setState({ popupVisible: false })};
-  const popupOpen = () => { setState({ popupVisible: true })};
+  const { image, name, price, popupOpen } = props;
   const { item, digits, img, textDigits, itemsDescription } = styles;
   return (
-    <>
-      <li className={ item } onClick={ popupOpen }>
-        <img className={ img } src={ image } alt={ name } />
-        <div className={ digits }>
-          <p className={ textDigits }>{ price }</p>
-          <CurrencyIcon />
-        </div>
-        <p className={ itemsDescription }>{ name }</p>
-      </li>
-      {/* {portal} */}
-      {state.popupVisible && <Modal
-        popupClose={ popupClose } 
-        popup='ingredient'
-        { ...props } 
-      />}
-    </>
-    )
+    <li className={ item } onClick={() => { popupOpen(props) }}>
+      <img className={ img } src={ image } alt={ name } />
+      <div className={ digits }>
+        <p className={ textDigits }>{ price }</p>
+        <CurrencyIcon />
+      </div>
+      <p className={ itemsDescription }>{ name }</p>
+    </li>
+  )
 })
 
 Item.propTypes = {
