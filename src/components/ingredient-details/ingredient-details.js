@@ -1,8 +1,8 @@
-import React from "react";
+import { memo } from "react";
 import PropTypes from 'prop-types';
 import styles from '../../styles/ingredient-details.module.css'
 
-const IngredientDetails = React.memo( ({ image_large, name, calories, carbohydrates, proteins, fat }) => {
+const IngredientDetails = memo( ({ image_large, name, calories, carbohydrates, proteins, fat }) => {
   const { title, inner, header, img, description, list, item, span } = styles;
   return (
     <div className={ inner }>
@@ -30,15 +30,13 @@ const IngredientDetails = React.memo( ({ image_large, name, calories, carbohydra
   )
 })
 
-IngredientDetails.PropTypes = PropTypes.shape({
-  image_large: PropTypes.string,
-  name: PropTypes.string,
-  calories: PropTypes.string,
-  carbohydrates: PropTypes.string,
-  proteins: PropTypes.string,
-  fat: PropTypes.string
-})
-
-
+IngredientDetails.propTypes = {
+  image_large: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  calories: PropTypes.number.isRequired,
+  carbohydrates: PropTypes.number.isRequired,
+  proteins: PropTypes.number.isRequired,
+  fat: PropTypes.number.isRequired
+}.isRequired
 
 export default IngredientDetails;

@@ -1,12 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import { memo, useState } from 'react';
 import { DragIcon, ConstructorElement, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
-import itemImage from '../../images/item.png';
 import styles from '../../styles/burger-constructor.module.css'
+import OrderDetails from '../order-details/order-details';
+import itemImage from '../../images/item.png';
 import Modal from '../modal/modal';
+import PropTypes from 'prop-types';
 
-const BurgerConstructor = React.memo( props => {
-  const [ state, setState ] = React.useState({
+
+const BurgerConstructor = memo( props => {
+  const [ state, setState ] = useState({
     buns: {
       top: {
         side: 'top',
@@ -20,9 +22,13 @@ const BurgerConstructor = React.memo( props => {
         price: 200,
         image: itemImage
       } 
-    }
+    },
+    popupVisible: false
   })
+  const popupClose = () => { setState(prevState => ({ ...prevState, popupVisible: false }))};
+  const popupOpen = () => { setState(prevState => ({ ...prevState, popupVisible: true }))};
   const { wrapper, inner } = styles;
+
 
   return (
     <section className={wrapper}>
@@ -30,8 +36,14 @@ const BurgerConstructor = React.memo( props => {
        <Bun {...state.buns.top} />
        <Items />
        <Bun {...state.buns.bottom} />
-       <Order total={50000} />
+       <Order popupOpen={ popupOpen } total={ 50000 } />
      </div>
+    {/* portal */}
+      {state.popupVisible && 
+      <Modal onClose={ popupClose }>
+        <OrderDetails />
+      </Modal>}
+    {/* portal */}
     </section>
   )
 })
@@ -39,16 +51,16 @@ const BurgerConstructor = React.memo( props => {
 BurgerConstructor.propTypes = {
   buns: PropTypes.shape({
     top: PropTypes.shape({
-      side: PropTypes.string,
-      text: PropTypes.string,
-      price: PropTypes.number,
-      image: PropTypes.string,
+      side: PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired,
+      price: PropTypes.number.isRequired,
+      image: PropTypes.string.isRequired
     }),
     bottom: PropTypes.shape({
-      side: PropTypes.string,
-      text: PropTypes.string,
-      price: PropTypes.number,
-      image: PropTypes.string,
+      side: PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired,
+      price: PropTypes.number.isRequired,
+      image: PropTypes.string.isRequired
     })
   })
 }
@@ -56,7 +68,8 @@ BurgerConstructor.propTypes = {
 export default BurgerConstructor;
 // ------------------------------
 
-const Bun = React.memo(({ side, text, price, image }) => {
+
+const Bun = memo(({ side, text, price, image }) => {
   const { bun } = styles;
   return (
     <div className={ bun }>
@@ -72,14 +85,15 @@ const Bun = React.memo(({ side, text, price, image }) => {
 })
 
 Bun.propTypes = {
-  side: PropTypes.string,
-  text: PropTypes.string,
-  price: PropTypes.number,
-  image: PropTypes.string
-}
+  side: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
+  image: PropTypes.string.isRequired
+}.isRequired
 
-const Items = React.memo(() => {
-  const [ state, setState ] = React.useState({
+
+const Items = memo( ({ text, price, image }) => {
+  const [ state, setState ] = useState({
     items: [
             {text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png'},
             {text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png'},
@@ -103,43 +117,50 @@ const Items = React.memo(() => {
   )
 })
 
-const Item = React.memo(({ text, price, image }) => {
+Items.propTypes = {
+  text: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
+  image: PropTypes.string.isRequired
+}.isRequired
+
+
+const Item = memo(({ text, price, image }) => {
   const { item, element } = styles;
   return (
-    <li className={item}>
+    <li className={ item }>
     <DragIcon />
-      <div className={element}>
+      <div className={ element }>
       <ConstructorElement
-      text={text}
-      price={price}
-      thumbnail={image}
+      text={ text }
+      price={ price }
+      thumbnail={ image }
       />
       </div>
     </li>
   )
 })
 
+Item.propTypes = {
+  text: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
+  image: PropTypes.string.isRequired
+}.isRequired
 
-const Order = React.memo(({ total }) => {
-  const [ state, setState ] = React.useState({ popupVisible: false});
-  const popupClose = () => { setState({ popupVisible: false })};
-  const popupOpen = () => { setState({ popupVisible: true })};
+
+const Order = memo(({ total, popupOpen }) => {
   const { order, total1, digits } = styles;
   return (
-    <>
-      <div className={order}>
-        <div className={total1}>
-          <p className={digits}>{total}</p>
-          <CurrencyIcon />
-        </div>
-        <Button onClick={ popupOpen } htmlType="button" type="primary" size="large">Оформить заказ</Button>
+    <div className={ order }>
+      <div className={ total1 }>
+        <p className={ digits }>{ total }</p>
+        <CurrencyIcon />
       </div>
-      {/* {portal} */}
-      {state.popupVisible && <Modal popupClose={ popupClose } />}
-    </>
+      <Button onClick={ popupOpen } htmlType="button" type="primary" size="large">Оформить заказ</Button>
+    </div>
   )
 })
 
-Order.PropTypes = {
-  total: PropTypes.number
-}
+Order.propTypes = {
+  total: PropTypes.number.isRequired,
+  popupOpen: PropTypes.func.isRequired
+}.isRequired

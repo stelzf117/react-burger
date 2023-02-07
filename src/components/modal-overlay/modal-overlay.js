@@ -1,11 +1,20 @@
-import React from 'react';
+import { memo } from 'react';
 import styles from '../../styles/modal-overlay.module.css'
+import PropTypes from 'prop-types';
 
-const ModalOverlay = React.memo(props => {
+const ModalOverlay = memo(({ onClose, children }) => {
+  const { overlay, wrapper } = styles;
   return (
-    <div className={ styles.overlay } onClick={ props.onClick }>
+    <div className={ wrapper }>
+      { children }
+      <div className={ overlay } onClick={ onClose } />
     </div>
   )
 })
+
+ModalOverlay.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  children: PropTypes.element.isRequired
+}.isRequired
 
 export default ModalOverlay;

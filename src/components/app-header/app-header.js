@@ -1,11 +1,11 @@
-import React from 'react';
+import { memo, useState, } from 'react';
 import { Logo, BurgerIcon, ProfileIcon, ListIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../../styles/app-header.module.css'
 import PropTypes from 'prop-types';
 
 
-const AppHeader = React.memo(() => {
-  const [ state, setState ] = React.useState({
+const AppHeader = memo(() => {
+  const [ state, setState ] = useState({
     constructor: 'primary',
     orders: 'secondary',
     login: 'secondary'
@@ -13,22 +13,22 @@ const AppHeader = React.memo(() => {
   const { header, wrapper, menu, item, logo } = styles;
 
   return (
-    <header className = { header }>
-         <div className = { wrapper }>
-           <ul className = { menu }>
+    <header className={ header }>
+         <div className={ wrapper }>
+           <ul className={ menu }>
 
-             <li className = { item }>
+             <li className={ item }>
                <Button
-               type = { state.constructor }
-               icon = { <BurgerIcon type = { state.constructor } />}>
+               type={ state.constructor }
+               icon={ <BurgerIcon type = { state.constructor } />}>
                 Конструктор
                 </Button>
               </li>
 
-              <li className = {item}>
+              <li className = { item }>
                 <Button
-                type = { state.orders }
-                icon = {<ListIcon type = { state.orders } />}>
+                type={ state.orders }
+                icon={ <ListIcon type={ state.orders } />}>
                   Лента заказов
                   </Button>
               </li>
@@ -39,7 +39,7 @@ const AppHeader = React.memo(() => {
            </div>
            <Button 
            type = { state.login }
-           icon={<ProfileIcon type = { state.login } />}>Личный кабинет</Button>
+           icon={<ProfileIcon type={ state.login } />}>Личный кабинет</Button>
          </div>
     </header>
   )
@@ -48,20 +48,21 @@ const AppHeader = React.memo(() => {
 export default AppHeader;
 // ----------------------
 
-const Button = React.memo(props => {
+const Button = memo(({ icon, children, type }) => {
   const { button, inactive, text } = styles;
-  const { icon, children, type } = props;
   const textClass = type === 'secondary' ? inactive : text
   return (
-    <button className={button}>
-      {icon}
-      <p className={textClass}>
-        {children}
+    <button className={ button }>
+      { icon }
+      <p className={ textClass }>
+        { children }
       </p>
     </button>
   )
 })
 
 Button.propTypes = {
+  icon: PropTypes.element.isRequired,
+  children: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired
 }.isRequired

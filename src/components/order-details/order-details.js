@@ -1,8 +1,9 @@
-import React from 'react';
+import { memo } from 'react';
 import styles from '../../styles/order-details.module.css'
 import doneImage from '../../images/done.jpg'
+import PropTypes from 'prop-types';
 
-const OrderDetails = React.memo(() => {
+const OrderDetails = memo(() => {
   const { inner, text1, text2, text3, done, digits } = styles;
   return (
     <div className={ inner }>

@@ -1,21 +1,20 @@
-import React from 'react';
-import AppHeader from '../app-header/app-header.js';
+import { memo, useEffect, useState } from 'react';
 import BurgerIngridients from '../burger-ingredients/burger-ingredients.js';
 import BurgerConstructor from '../burger-constructor/burger-constructor.js';
-import styles from '../../styles/app.module.css'
+import AppHeader from '../app-header/app-header.js';
 import { sortData } from '../../utils/sort-data.js';
+import styles from '../../styles/app.module.css';
 
 
-const App = React.memo(() => {
-  const [ state, setState ] = React.useState({
+const App = memo(() => {
+  const [ state, setState ] = useState({
     isLoading: false,
     hasError: false,
     data: []
   })
-  React.useEffect(() => {
-
+  useEffect(() => {
     const getData = async() => {
-      setState({...state, isLoading: true});
+      setState({ ...state, isLoading: true });
       const url = 'https://norma.nomoreparties.space/api/ingredients';
       const res = await fetch(url)
         .then(respond => {
@@ -33,11 +32,9 @@ const App = React.memo(() => {
         })
     }
     getData()
-
   },
     [ ]
   )
-
   const { main } = styles;
   return (
     <>
@@ -48,14 +45,14 @@ const App = React.memo(() => {
         state.data.length &&
         <>
           <AppHeader />
-          <main className={main}>
-            <BurgerIngridients ingridients={sortData(state.data)} />
+          <main className={ main }>
+            <BurgerIngridients ingridients={ sortData(state.data) } />
             <BurgerConstructor />
           </main>
         </>
       }
     </>
   )
-})
+});
 
 export default App;
