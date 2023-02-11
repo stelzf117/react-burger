@@ -46,7 +46,7 @@ BurgerIngridients.propTypes = {
     main: PropTypes.arrayOf(PropTypes.object).isRequired,
     sauce: PropTypes.arrayOf(PropTypes.object).isRequired
   }).isRequired
-}.isRequired
+}
 
 export default BurgerIngridients;
 //------------------------------
@@ -99,10 +99,10 @@ const Items = memo( ({ bun, sauce, main, popupOpen }) => {
 });
 
 Items.propTypes = {
-    bun: PropTypes.arrayOf(PropTypes.object).isRequired,
-    main: PropTypes.arrayOf(PropTypes.object).isRequired,
-    sauce: PropTypes.arrayOf(PropTypes.object).isRequired
-}.isRequired;
+  bun: PropTypes.arrayOf(PropTypes.object).isRequired,
+  main: PropTypes.arrayOf(PropTypes.object).isRequired,
+  sauce: PropTypes.arrayOf(PropTypes.object).isRequired
+}
 
 
 const Item = memo( props => {
@@ -125,4 +125,4 @@ Item.propTypes = {
   name: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
   popupOpen: PropTypes.func.isRequired
-}.isRequired;
+}

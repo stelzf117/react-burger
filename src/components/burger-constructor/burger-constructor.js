@@ -5,6 +5,7 @@ import OrderDetails from '../order-details/order-details';
 import itemImage from '../../images/item.png';
 import Modal from '../modal/modal';
 import PropTypes from 'prop-types';
+import ingredientType from '../../utils/types';
 
 
 const BurgerConstructor = memo( props => {
@@ -50,18 +51,8 @@ const BurgerConstructor = memo( props => {
 
 BurgerConstructor.propTypes = {
   buns: PropTypes.shape({
-    top: PropTypes.shape({
-      side: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
-      image: PropTypes.string.isRequired
-    }),
-    bottom: PropTypes.shape({
-      side: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
-      image: PropTypes.string.isRequired
-    })
+    top: ingredientType,
+    bottom: ingredientType
   })
 }
 
@@ -89,19 +80,19 @@ Bun.propTypes = {
   text: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
   image: PropTypes.string.isRequired
-}.isRequired
+}
 
 
 const Items = memo( ({ text, price, image }) => {
   const [ state, setState ] = useState({
     items: [
-            {text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png'},
-            {text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png'},
-            {text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png'},
-            {text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png'},
-            {text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png'},
-            {text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png'},
-            {text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png'},
+            { text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png' },
+            { text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png' },
+            { text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png' },
+            { text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png' },
+            { text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png' },
+            { text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png' },
+            { text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png' }
            ]
   })
   const { items } = styles;
@@ -121,7 +112,7 @@ Items.propTypes = {
   text: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
   image: PropTypes.string.isRequired
-}.isRequired
+}
 
 
 const Item = memo(({ text, price, image }) => {
@@ -144,7 +135,7 @@ Item.propTypes = {
   text: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
   image: PropTypes.string.isRequired
-}.isRequired
+}
 
 
 const Order = memo(({ total, popupOpen }) => {
@@ -163,4 +154,4 @@ const Order = memo(({ total, popupOpen }) => {
 Order.propTypes = {
   total: PropTypes.number.isRequired,
   popupOpen: PropTypes.func.isRequired
-}.isRequired
+}

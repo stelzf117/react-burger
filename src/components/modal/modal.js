@@ -36,6 +36,6 @@ const Modal = memo(({ onClose, children }) => {
 Modal.propTypes = {
   onClose: PropTypes.func.isRequired,
   children: PropTypes.element.isRequired
-}.isRequired
+}
 
 export default Modal;

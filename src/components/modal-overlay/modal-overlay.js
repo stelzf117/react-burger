@@ -15,6 +15,6 @@ const ModalOverlay = memo(({ onClose, children }) => {
 ModalOverlay.propTypes = {
   onClose: PropTypes.func.isRequired,
   children: PropTypes.element.isRequired
-}.isRequired
+}
 
 export default ModalOverlay;

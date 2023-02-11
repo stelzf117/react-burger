@@ -27,7 +27,5 @@
 }
 
 .done {
-  width: 120px;
-  height: 120px;
   composes: mt-15 from global;
 }

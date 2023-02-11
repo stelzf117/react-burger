@@ -65,4 +65,4 @@ Button.propTypes = {
   icon: PropTypes.element.isRequired,
   children: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired
-}.isRequired
+}
