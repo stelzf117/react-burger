@@ -1,52 +1,48 @@
 import { memo, useState, Fragment } from 'react';
-import PropTypes from 'prop-types';
 import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../../styles/burger-ingredients.module.css';
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
+import { ingredientsType, ingredientType } from '../../utils/types';
+import PropTypes from 'prop-types';
 
 
-const BurgerIngridients = memo(({ ingridients }) => {
+const BurgerIngridients = memo(({ ingredients }) => {
   const [ state, setState ] = useState({ popupVisible: false });
   const popupClose = () => setState({ popupVisible: false });
   const popupOpen = ingredient => setState(() => {
     return { 
-      currentIngredient: {
-        name: ingredient.name,
-        image_large: ingredient.image_large,
-        fat: ingredient.fat,
-        proteins: ingredient.proteins,
-        calories: ingredient.calories,
-        carbohydrates: ingredient.carbohydrates
-      }, 
-      popupVisible: true }
+      currentIngredient: { ...ingredient },
+      popupVisible: true 
+    }
   });
   const { title, wrapper } = styles;
 
-
   return (
     <section className={ wrapper }>
-      <h2 className={title}>Соберите бургер</h2>
+      <h2 className={ title }>Соберите бургер</h2>
       <Tabs />
-      <Items {...ingridients} popupOpen={ popupOpen } />
+      <Items 
+        ingredients={ ingredients }
+        popupOpen={ popupOpen } 
+      />
 
       {/*  portal  */}
-        {state.popupVisible &&
-        <Modal onClose={ popupClose }>
-          <IngredientDetails { ...state.currentIngredient } />
-        </Modal>}
+        {
+          state.popupVisible &&
+          <Modal onClose={ popupClose }>
+            <IngredientDetails ingredient={ state.currentIngredient } />
+          </Modal>
+        }
       {/*  portal  */}
     </section>
   )
 });
 
 BurgerIngridients.propTypes = {
-  ingridients: PropTypes.shape({
-    bun: PropTypes.arrayOf(PropTypes.object).isRequired,
-    main: PropTypes.arrayOf(PropTypes.object).isRequired,
-    sauce: PropTypes.arrayOf(PropTypes.object).isRequired
-  }).isRequired
-}
+  ingredients: ingredientsType.isRequired
+};
+
 
 export default BurgerIngridients;
 //------------------------------
@@ -66,50 +62,53 @@ const Tabs = memo(() => {
 });
 
 
-const Items = memo( ({ bun, sauce, main, popupOpen }) => {
+const Items = memo(({ ingredients, popupOpen }) => {
   const [ state, setState ] = useState({
-    ingredients: {
-      bun: bun,
-      sauce: sauce,
-      main: main
-    },
+    ingredients: { 
+      bun: ingredients.bun,
+      main: ingredients.main,
+      sauce: ingredients.sauce
+     },
     headlines: ['Булки', 'Соусы', 'Начинки']
   });
   const criteria = ["bun", "sauce", "main"];
-  const { headline, items, ingredients } = styles;
+  const { headline, items, components } = styles;
 
 
   return (
-    <ul className={ ingredients }>
-      {state.headlines.map(( head, index ) => (
-        <Fragment key={ index }>
-          <h3 className={ headline }>{ head }</h3>
-          <ul className={ items }>
-            {state.ingredients[criteria[index]].map((ingredient, i) => (
-              <Item key={`${ ingredient._id}`}
-              popupOpen={ popupOpen }
-              { ...ingredient }
-               />
-            ))}
-          </ul>
-        </Fragment>
-      ))}
+    <ul className={ components }>
+      {
+        state.headlines.map(( head, index ) => (
+          <Fragment key={ index }>
+            <h3 className={ headline }>{ head }</h3>
+            <ul className={ items }>
+              {
+                state.ingredients[criteria[index]].map( ingredient => (
+                  <Item key={`${ ingredient._id}`}
+                    popupOpen={ popupOpen }
+                    ingredient={ ingredient }
+                  />
+                ))
+              }
+            </ul>
+          </Fragment>
+        ))
+      }
     </ul>
   )
 });
 
 Items.propTypes = {
-  bun: PropTypes.arrayOf(PropTypes.object).isRequired,
-  main: PropTypes.arrayOf(PropTypes.object).isRequired,
-  sauce: PropTypes.arrayOf(PropTypes.object).isRequired
-}
+  ingredients: ingredientsType.isRequired,
+  popupOpen: PropTypes.func.isRequired
+};
 
 
-const Item = memo( props => {
-  const { image, name, price, popupOpen } = props;
+const Item = memo(({ ingredient, popupOpen }) => {
+  const { image, name, price } = ingredient;
   const { item, digits, img, textDigits, itemsDescription } = styles;
   return (
-    <li className={ item } onClick={() => { popupOpen(props) }}>
+    <li className={ item } onClick={() => { popupOpen(ingredient) }}>
       <img className={ img } src={ image } alt={ name } />
       <div className={ digits }>
         <p className={ textDigits }>{ price }</p>
@@ -121,8 +120,6 @@ const Item = memo( props => {
 });
 
 Item.propTypes = {
-  image: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  price: PropTypes.number.isRequired,
+  ingredient: ingredientType.isRequired,
   popupOpen: PropTypes.func.isRequired
-}
+};

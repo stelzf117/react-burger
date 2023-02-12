@@ -4,11 +4,11 @@ import styles from '../../styles/burger-constructor.module.css'
 import OrderDetails from '../order-details/order-details';
 import itemImage from '../../images/item.png';
 import Modal from '../modal/modal';
+import { ingredientType } from '../../utils/types';
 import PropTypes from 'prop-types';
-import ingredientType from '../../utils/types';
 
 
-const BurgerConstructor = memo( props => {
+const BurgerConstructor = memo(({ bun, ingredient }) => {
   const [ state, setState ] = useState({
     buns: {
       top: {
@@ -25,65 +25,62 @@ const BurgerConstructor = memo( props => {
       } 
     },
     popupVisible: false
-  })
-  const popupClose = () => { setState(prevState => ({ ...prevState, popupVisible: false }))};
-  const popupOpen = () => { setState(prevState => ({ ...prevState, popupVisible: true }))};
+  });
+  const popupClose = () => { setState( prevState => ({ ...prevState, popupVisible: false }))};
+  const popupOpen = () => { setState( prevState => ({ ...prevState, popupVisible: true }))};
   const { wrapper, inner } = styles;
 
 
   return (
-    <section className={wrapper}>
-     <div className={inner}>
-       <Bun {...state.buns.top} />
+    <section className={ wrapper }>
+     <div className={ inner }>
+       <Bun bun={ state.buns.top } />
        <Items />
-       <Bun {...state.buns.bottom} />
-       <Order popupOpen={ popupOpen } total={ 50000 } />
+       <Bun bun={ state.buns.bottom } />
+       <Order popupOpen={ popupOpen } total={ 0 } />
      </div>
     {/* portal */}
-      {state.popupVisible && 
-      <Modal onClose={ popupClose }>
-        <OrderDetails />
-      </Modal>}
+      {
+        state.popupVisible && 
+        <Modal onClose={ popupClose }>
+          <OrderDetails />
+        </Modal>
+      }
     {/* portal */}
     </section>
   )
 })
 
 BurgerConstructor.propTypes = {
-  buns: PropTypes.shape({
-    top: ingredientType,
-    bottom: ingredientType
-  })
+  bun: ingredientType,
+  ingredient: ingredientType
 }
 
 export default BurgerConstructor;
 // ------------------------------
 
 
-const Bun = memo(({ side, text, price, image }) => {
-  const { bun } = styles;
+const Bun = memo(({ bun }) => {
+  const { side, text, price, image } = bun;
+  const { bap } = styles;
   return (
-    <div className={ bun }>
+    <div className={ bap }>
       <ConstructorElement
-      type={side}
-      isLocked={true}
-      text={text}
-      price={price}
-      thumbnail={image}
+        type={ side }
+        isLocked={ true }
+        text={ text }
+        price={ price }
+        thumbnail={ image }
       />
     </div>
   )
 })
 
-Bun.propTypes = {
-  side: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
-  price: PropTypes.number.isRequired,
-  image: PropTypes.string.isRequired
-}
+// Bun.propTypes = {
+//   bun: ingredientType
+// }
 
-
-const Items = memo( ({ text, price, image }) => {
+const Items = memo( ({ ingredient }) => {
   const [ state, setState ] = useState({
     items: [
             { text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png' },
@@ -98,24 +95,24 @@ const Items = memo( ({ text, price, image }) => {
   const { items } = styles;
   return(
     <ul className={items}>
-      {state.items.map(( item, index ) => (
-        <Item key={`${index}`}
-        text={ item.text } 
-        price={ item.price } 
-        image={ item.image } />
-      ))}
+      {
+        state.items.map(( item, index ) => (
+          <Item key={`${ index }`}
+          ingredient={ item }
+          />
+        ))
+      }
   </ul>
   )
 })
 
 Items.propTypes = {
-  text: PropTypes.string.isRequired,
-  price: PropTypes.number.isRequired,
-  image: PropTypes.string.isRequired
+  ingredient: ingredientType
 }
 
 
-const Item = memo(({ text, price, image }) => {
+const Item = memo(({ ingredient }) => {
+  const { text, price, image } = ingredient;
   const { item, element } = styles;
   return (
     <li className={ item }>
@@ -131,11 +128,9 @@ const Item = memo(({ text, price, image }) => {
   )
 })
 
-Item.propTypes = {
-  text: PropTypes.string.isRequired,
-  price: PropTypes.number.isRequired,
-  image: PropTypes.string.isRequired
-}
+// Item.propTypes = {
+//   ingredient: ingredientType
+// }
 
 
 const Order = memo(({ total, popupOpen }) => {

@@ -17,7 +17,7 @@
   margin: 0;
 }
 
-.ingredients {
+.components {
   padding: 0;
   list-style-type: none;
   margin-left: 0;
@@ -27,17 +27,17 @@
   composes: mt-10 from global;
 }
 
-.ingredients::-webkit-scrollbar {
+.components::-webkit-scrollbar {
   width: 8px;
 
 }
 
-.ingredients::-webkit-scrollbar-track {
+.components::-webkit-scrollbar-track {
   background: #2F2F37;
   margin-bottom: 52px;
 }
 
-.ingredients::-webkit-scrollbar-thumb {
+.components::-webkit-scrollbar-thumb {
   background-color: #8585AD;
 }
 

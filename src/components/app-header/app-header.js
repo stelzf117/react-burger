@@ -19,9 +19,9 @@ const AppHeader = memo(() => {
 
              <li className={ item }>
                <Button
-               type={ state.constructor }
-               icon={ <BurgerIcon type = { state.constructor } />}>
-                Конструктор
+                  type={ state.constructor }
+                  icon={ <BurgerIcon type={ state.constructor } />}>
+                  Конструктор
                 </Button>
               </li>
 

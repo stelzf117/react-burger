@@ -46,7 +46,7 @@ const App = memo(() => {
         <>
           <AppHeader />
           <main className={ main }>
-            <BurgerIngridients ingridients={ sortData(state.data) } />
+            <BurgerIngridients ingredients={ sortData(state.data) } />
             <BurgerConstructor />
           </main>
         </>

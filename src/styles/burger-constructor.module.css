@@ -15,7 +15,7 @@
   align-items: flex-end;
 }
 
-.bun {
+.bap {
   composes: mr-4 from global;
 }
 
