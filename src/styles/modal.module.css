@@ -1,0 +1,21 @@
+.wrapper {
+  z-index: 999;
+  width: 720px;
+  border-radius: 40px;
+  background-color: #1C1C21;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.close {
+  z-index: 1;
+  position: absolute;
+  right: 0;
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  composes: mr-10 mt-10 from global;
+}
