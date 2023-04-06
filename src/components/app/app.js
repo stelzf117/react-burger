@@ -4,6 +4,9 @@ import BurgerConstructor from '../burger-constructor/burger-constructor.js';
 import AppHeader from '../app-header/app-header.js';
 import { sortData } from '../../utils/sort-data.js';
 import styles from '../../styles/app.module.css';
+// context
+import { IngredientsContext } from '../../services/appContext';
+import { BurgerConstructorProvider } from '../../services/burgerConstructorContext';
 
 
 const App = memo(() => {
@@ -24,7 +27,8 @@ const App = memo(() => {
           else { Promise.reject(`Ошибка: ${res.status}`) }
         })
         .then(object => {
-          setState({ ...state, isLoading: false, data: object.data })
+          const sortedData = sortData(object.data);
+          setState({ ...state, isLoading: false, data: sortedData })
         })
         .catch(e => {
           console.log(e);
@@ -42,12 +46,16 @@ const App = memo(() => {
       {
         !state.isLoading &&
         !state.hasError &&
-        state.data.length &&
+        state.data.length != [] &&
         <>
           <AppHeader />
           <main className={ main }>
-            <BurgerIngridients ingredients={ sortData(state.data) } />
-            <BurgerConstructor />
+            <BurgerIngridients ingredients={ state.data } />
+            <IngredientsContext.Provider value={ state.data }>
+              <BurgerConstructorProvider>
+                <BurgerConstructor />
+              </BurgerConstructorProvider>
+            </IngredientsContext.Provider>
           </main>
         </>
       }

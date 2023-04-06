@@ -1,11 +1,13 @@
-import { memo } from 'react';
+import { memo, useContext } from 'react';
 import styles from '../../styles/order-details.module.css'
+import { burgerConstructorContext } from '../../services/burgerConstructorContext'
 
 const OrderDetails = memo(() => {
+  const { state: {order: {number}} } = useContext(burgerConstructorContext);
   const { inner, text1, text2, text3, done, digits } = styles;
   return (
     <div className={ inner }>
-      <p className={ digits }>034536</p>
+      <p className={ digits }>{number}</p>
       <p className={ text1 }>идентификатор заказа</p>
 
         <svg className={ done }
