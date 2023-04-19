@@ -9,6 +9,17 @@ import { IngredientsContext } from '../../services/appContext';
 import { BurgerConstructorProvider } from '../../services/burgerConstructorContext';
 
 
+// redux -------------------------------------------------------------------
+// import { compose, createStore, applyMiddleware } from 'redux';
+// const composeEnhancers =
+//   typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+//     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
+//     : compose; 
+
+// const enhancer = composeEnhancers();
+// const store = createStore(rootReducer, enhancer); 
+// redux --------------------------------------------------------------------
+
 const App = memo(() => {
   const [ state, setState ] = useState({
     isLoading: false,
