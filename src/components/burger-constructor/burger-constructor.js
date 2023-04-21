@@ -1,4 +1,4 @@
-import { memo, useContext } from 'react';
+import { memo, useEffect } from 'react';
 import { DragIcon, ConstructorElement, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../../styles/burger-constructor.module.css'
 // modal
@@ -7,19 +7,19 @@ import Modal from '../modal/modal';
 // types
 import PropTypes from 'prop-types';
 import { ingredientType } from '../../utils/types';
-// context
-import { IngredientsContext } from '../../services/appContext';
-import { burgerConstructorContext } from '../../services/burgerConstructorContext'
-
+// redux
+import { useSelector, useDispatch } from 'react-redux';
+import updateTotalPrice from '../../services/middleware/totalPrice';
+import getOrderDetails from '../../services/middleware/order-details'
+import { CLOSE_POPUP_ORDER, DELETE_ORDER_NUMBER } from '../../services/actions/constructor';
 
 const BurgerConstructor = memo(() => {
-  const ingredients = useContext(IngredientsContext);
-  const { 
-    state,
-    addBun,
-    popupClose,
-    popupOpen } = useContext(burgerConstructorContext);
-  const { popupVisible } = state;
+  const { popupVisible } = useSelector(store => store.constructorReducer);
+  const dispatch = useDispatch()
+  const popupOnClose = () => {
+    dispatch({ type: CLOSE_POPUP_ORDER });
+    dispatch({ type: DELETE_ORDER_NUMBER });
+  }
   const { wrapper, inner } = styles;
 
 
@@ -27,14 +27,14 @@ const BurgerConstructor = memo(() => {
     <section className={ wrapper }>
      <div className={ inner }>
         <Bun side='top' />
-        <Items ingredients={ state.ingredients } />
+        <Items />
         <Bun side='bottom' />
-        <Order popupOpen={ popupOpen } />
+        <Order />
      </div>
     {/* portal */}
       {
-        popupVisible && 
-        <Modal onClose={ popupClose }>
+        popupVisible &&
+        <Modal onClose={ popupOnClose }>
           <OrderDetails />
         </Modal>
       }
@@ -49,8 +49,7 @@ export default BurgerConstructor;
 
 
 const Bun = memo(({ textSide, side }) => {
-  const { state } = useContext(burgerConstructorContext);
-  const {bun: { text, price, image }} = state;
+  const { text, price, image } = useSelector(store => store.constructorReducer.bun)
   const { bap } = styles;
   return (
     <div className={ bap }>
@@ -70,12 +69,13 @@ Bun.propTypes = {
   side: PropTypes.oneOf(['top', 'bottom']).isRequired
 }
 
-const Items = memo( ({ ingredients }) => {
+const Items = memo(() => {
+  const ingredients = useSelector(store => store.constructorReducer.ingredients);
   const { items } = styles;
   return(
     <ul className={items}>
       {
-        ingredients && ingredients.map(( item, index ) => (
+         ingredients.map(( item, index ) => (
           <Item key={`${ index }`}
             ingredient={ item }
           />
@@ -84,11 +84,6 @@ const Items = memo( ({ ingredients }) => {
   </ul>
   )
 })
-
-Items.propTypes = {
-  ingredients: PropTypes.arrayOf(ingredientType)
-}
-
 
 const Item = memo(({ ingredient }) => {
   const { name, price, image } = ingredient;
@@ -113,19 +108,27 @@ Item.propTypes = {
 
 
 const Order = memo(() => {
-  const { totalPrice, postData } = useContext(burgerConstructorContext);
+  const { totalPrice } = useSelector(store => store.constructorReducer);
+  const dispatch = useDispatch();
+  const popupOpen = () => dispatch(getOrderDetails());
+
+  useEffect(() => {
+    dispatch(updateTotalPrice())
+  },
+  [ dispatch ] )
+
   const { order, total1, digits } = styles;
   return (
     <div className={ order }>
       <div className={ total1 }>
-        <p className={ digits }>{ totalPrice() }</p>
+        <p className={ digits }>{ totalPrice }</p>
         <CurrencyIcon />
       </div>
       <Button 
-        onClick={postData}
-        htmlType="button" 
-        type="primary" 
+        htmlType="button"
+        type="primary"
         size="large"
+        onClick={ popupOpen }
       >
         Оформить заказ
       </Button>

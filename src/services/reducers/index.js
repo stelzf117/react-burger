@@ -1,15 +1,16 @@
 import { 
     combineReducers,
     createStore,
+    applyMiddleware,
   } from 'redux';
 import { composeWithDevTools  } from 'redux-devtools-extension';
+// reducers
+import { ingredientsReducer } from './ingredients';
+import { constructorReducer } from './constructor';
+// middleware
+import thunk from 'redux-thunk';
 
 const initialState = {
-  receivedIngredients: {
-    bun: [],
-    main: [],
-    sauces: [],
-  },
   constructorIngredients: {
     bun: {},
     filling: []
@@ -18,15 +19,12 @@ const initialState = {
   orderDetails: {}
 }
 
-const firstReducer = (state = initialState, action) => {
-  switch (action.type) {
-    default: 
-      return state
-  }
-}
+const middleware = [thunk];
+const enhancer = composeWithDevTools(applyMiddleware(...middleware));
 
 const rootReducer = combineReducers ({
-  firstReducer,
+  ingredientsReducer,
+  constructorReducer
 })
 
-export const store = createStore(rootReducer, composeWithDevTools());
+export const store = createStore(rootReducer, enhancer);

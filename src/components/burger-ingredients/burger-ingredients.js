@@ -1,47 +1,52 @@
-import { memo, useState, Fragment } from 'react';
+import { memo, useState, Fragment, useEffect} from 'react';
 import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../../styles/burger-ingredients.module.css';
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
-import { ingredientsType, ingredientType } from '../../utils/types';
+import { ingredientType } from '../../utils/types';
 import PropTypes from 'prop-types';
+// redux
+import { useDispatch, useSelector } from 'react-redux';
+import getIngredients from '../../services/middleware/ingredients';
+import { GET_INGREDIENT_INFORMATION, OPEN_POPUP, CLOSE_POPUP, DELETE_VIEWED_iNGREDIENT } from '../../services/actions/ingredients';
 
 
-const BurgerIngridients = memo(({ ingredients }) => {
-  const [ state, setState ] = useState({ popupVisible: false });
-  const popupClose = () => setState({ popupVisible: false });
-  const popupOpen = ingredient => setState(() => {
-    return { 
-      currentIngredient: { ...ingredient },
-      popupVisible: true 
-    }
-  });
+const BurgerIngridients = memo(() => {
+  const { ingredients, ingredientsSuccess, viewedIngredient } = useSelector(store => store.ingredientsReducer);
+  const dispatch = useDispatch();
+  const { popupVisible } = useSelector(store => store.ingredientsReducer);
+  const popupOnClose = () => { 
+    dispatch({ type: CLOSE_POPUP })
+    dispatch({ type: DELETE_VIEWED_iNGREDIENT })
+  }
+
+  useEffect(() => {
+    dispatch(getIngredients());
+  },
+  [ dispatch ])
   const { title, wrapper } = styles;
 
+
   return (
-    <section className={ wrapper }>
-      <h2 className={ title }>Соберите бургер</h2>
-      <Tabs />
-      <Items 
-        ingredients={ ingredients }
-        popupOpen={ popupOpen } 
-      />
+      ingredientsSuccess &&
+      <section className={ wrapper }>
+        <h2 className={ title }>Соберите бургер</h2>
+        <Tabs />
+        <Items
+          ingredients={ ingredients }
+        />
 
-      {/*  portal  */}
-        {
-          state.popupVisible &&
-          <Modal onClose={ popupClose }>
-            <IngredientDetails ingredient={ state.currentIngredient } />
+        {/* portal */}
+        {popupVisible && (
+          <Modal onClose={ popupOnClose }>
+            <IngredientDetails />
           </Modal>
-        }
-      {/*  portal  */}
-    </section>
-  )
-});
+        )}
+        {/* portal */}
 
-BurgerIngridients.propTypes = {
-  ingredients: ingredientsType.isRequired
-};
+      </section>
+  );
+});
 
 
 export default BurgerIngridients;
@@ -62,15 +67,9 @@ const Tabs = memo(() => {
 });
 
 
-const Items = memo(({ ingredients, popupOpen }) => {
-  const [ state, setState ] = useState({
-    ingredients: { 
-      bun: ingredients.bun,
-      main: ingredients.main,
-      sauce: ingredients.sauce
-     },
-    headlines: ['Булки', 'Соусы', 'Начинки']
-  });
+const Items = memo(() => {
+  const ingredients = useSelector(store => store.ingredientsReducer.ingredients);
+  const [ state, setState ] = useState({ headlines: ['Булки', 'Соусы', 'Начинки'] });
   const criteria = ["bun", "sauce", "main"];
   const { headline, items, components } = styles;
 
@@ -83,9 +82,8 @@ const Items = memo(({ ingredients, popupOpen }) => {
             <h3 className={ headline }>{ head }</h3>
             <ul className={ items }>
               {
-                state.ingredients[criteria[index]].map( ingredient => (
+                ingredients[criteria[index]].map( ingredient => (
                   <Item key={`${ ingredient._id}`}
-                    popupOpen={ popupOpen }
                     ingredient={ ingredient }
                   />
                 ))
@@ -98,17 +96,24 @@ const Items = memo(({ ingredients, popupOpen }) => {
   )
 });
 
-Items.propTypes = {
-  ingredients: ingredientsType.isRequired,
-  popupOpen: PropTypes.func.isRequired
-};
 
-
-const Item = memo(({ ingredient, popupOpen }) => {
+const Item = memo(({ ingredient }) => {
   const { image, name, price } = ingredient;
   const { item, digits, img, textDigits, itemsDescription } = styles;
+  const dispatch = useDispatch();
+  const getIngredientInformation = () => {
+    dispatch({
+      type: GET_INGREDIENT_INFORMATION,
+      ingredient: ingredient
+    });
+    dispatch({
+      type: OPEN_POPUP
+    })
+  };
+
+
   return (
-    <li className={ item } onClick={() => { popupOpen(ingredient) }}>
+    <li className={ item } onClick={() => { getIngredientInformation() }}>
       <img className={ img } src={ image } alt={ name } />
       <div className={ digits }>
         <p className={ textDigits }>{ price }</p>
@@ -121,5 +126,4 @@ const Item = memo(({ ingredient, popupOpen }) => {
 
 Item.propTypes = {
   ingredient: ingredientType.isRequired,
-  popupOpen: PropTypes.func.isRequired
 };

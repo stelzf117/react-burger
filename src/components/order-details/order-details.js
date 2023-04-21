@@ -1,13 +1,13 @@
-import { memo, useContext } from 'react';
+import { memo } from 'react';
 import styles from '../../styles/order-details.module.css'
-import { burgerConstructorContext } from '../../services/burgerConstructorContext'
+import { useSelector } from 'react-redux';
 
 const OrderDetails = memo(() => {
-  const { state: {order: {number}} } = useContext(burgerConstructorContext);
+  const { order } = useSelector(store => store.constructorReducer)
   const { inner, text1, text2, text3, done, digits } = styles;
   return (
     <div className={ inner }>
-      <p className={ digits }>{number}</p>
+      <p className={ digits }>{ order }</p>
       <p className={ text1 }>идентификатор заказа</p>
 
         <svg className={ done }

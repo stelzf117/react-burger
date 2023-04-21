@@ -4,6 +4,7 @@ import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../../styles/modal.module.css'
 import ModalOverlay from '../modal-overlay/modal-overlay.js';
 import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 
 const modalRoot = document.getElementById('react-modals');
 
@@ -18,6 +19,8 @@ const Modal = memo(({ onClose, children }) => {
     []
   );
   const { wrapper, close } = styles;
+
+
   return createPortal ((
       <ModalOverlay onClose={ onClose }>
         <div className={ wrapper }>
