@@ -7,6 +7,7 @@ import {
   OPEN_POPUP,
   DELETE_VIEWED_iNGREDIENT,
   CLOSE_POPUP,
+  SET_ACTIVE_TAB
 } from "../actions/ingredients";
 
 const initialState = {
@@ -16,6 +17,10 @@ const initialState = {
   error: '',
   popupVisible: false,
   viewedIngredient: {},
+  tabs: ['one', 'two', 'three'],
+  activeTab: 0,
+  criteria: ["bun", "sauce", "main"],
+  headlines: ['Булки', 'Соусы', 'Начинки'],
   ingredients: {
     bun: [],
     main: [],
@@ -76,6 +81,12 @@ export const ingredientsReducer = (state = initialState, action) => {
       return {
         ...state,
         viewedIngredient: {}
+      }
+    }
+    case SET_ACTIVE_TAB: {
+      return {
+        ...state,
+        activeTab: action.activeTab
       }
     }
     default: {
