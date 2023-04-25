@@ -1,4 +1,5 @@
 import itemImage from '../../images/item.png';
+
 import { 
   UPDATE_TOTAL_PRICE,
   GET_ORDER_DETAILS,
@@ -7,14 +8,16 @@ import {
   OPEN_POPUP_ORDER,
   DELETE_ORDER_NUMBER,
   CLOSE_POPUP_ORDER,
+  UPDATE_BUN,
+  ADD_INGREDIENT,
+  DELETE_INGREDIENT
 } from '../actions/constructor';
 
 const initialState = {
   bun: {
-    text: 'ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ',
-    price: 20,
-    image: itemImage, 
-    _id: "60d3b41abdacab0026a733c6"
+    name: 'добавьте булочкуㅤㅤㅤㅤ',
+    price: 0,
+    image: itemImage,
   },
   order: 'number',
   popupVisible: false,
@@ -23,22 +26,7 @@ const initialState = {
   orderFailed: false,
   totalPrice: 0,
   order: 0,
-  ingredients: [
-    {
-          "_id": "60d3b41abdacab0026a733c9",
-          "name": "Мясо бессмертных моллюсков Protostomia",
-          "type": "main",
-          "proteins": 433,
-          "fat": 244,
-          "carbohydrates": 33,
-          "calories": 420,
-          "price": 1337,
-          "image": "https://code.s3.yandex.net/react/code/meat-02.png",
-          "image_mobile": "https://code.s3.yandex.net/react/code/meat-02-mobile.png",
-          "image_large": "https://code.s3.yandex.net/react/code/meat-02-large.png",
-          "__v": 0
-      },
-  ],
+  ingredients: [],
 }
 
 export const constructorReducer = (state = initialState, action) => {
@@ -86,6 +74,31 @@ export const constructorReducer = (state = initialState, action) => {
       return {
         ...state,
         popupVisible: false
+      }
+    }
+    case UPDATE_BUN: {
+      return {
+        ...state,
+        bun: action.bun
+      }
+    }
+    case ADD_INGREDIENT: {
+      const ingredient = action.ingredient;
+      const ingredientWithIndex = {
+        ...ingredient,
+        index: action.index
+      }
+      return {
+        ...state,
+        ingredients: [...state.ingredients, ingredientWithIndex]
+      }
+    }
+    case DELETE_INGREDIENT: {
+      const index = action.ingredient.index;
+      const newIngredients = state.ingredients.filter(ingredient => ingredient.index !== index);
+      return {
+        ...state,
+        ingredients: newIngredients
       }
     }
     default: {

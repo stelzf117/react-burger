@@ -1,4 +1,4 @@
-import { memo, useState, Fragment, useEffect, useRef} from 'react';
+import { memo, useEffect, useRef} from 'react';
 import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../../styles/burger-ingredients.module.css';
 import Modal from '../modal/modal';
@@ -8,10 +8,12 @@ import { ingredientType } from '../../utils/types';
 import { useDispatch, useSelector } from 'react-redux';
 import getIngredients from '../../services/middleware/ingredients';
 import { GET_INGREDIENT_INFORMATION, OPEN_POPUP, CLOSE_POPUP, DELETE_VIEWED_iNGREDIENT, SET_ACTIVE_TAB } from '../../services/actions/ingredients';
+// DND
+import { useDrag } from 'react-dnd';
 
 
 const BurgerIngridients = memo(() => {
-  const { ingredients, ingredientsSuccess, viewedIngredient } = useSelector(store => store.ingredientsReducer);
+  const { ingredientsSuccess } = useSelector(store => store.ingredientsReducer);
   const dispatch = useDispatch();
   const { popupVisible } = useSelector(store => store.ingredientsReducer);
   const popupOnClose = () => { 
@@ -67,10 +69,19 @@ const Tabs = memo(() => {
 
 
 const Items = memo(() => {
+  // store
   const { ingredients, headlines, criteria, activeTab } = useSelector(store => store.ingredientsReducer);
+  const ingredientsConstrucor = useSelector(store => store.constructorReducer.ingredients)
+  
+  // counter
+  const ingredientsCounter = () => {
+    
+  }
+
+
+  // scroll
   const dispatch = useDispatch();
   const setActiveTab = index => dispatch({ type: SET_ACTIVE_TAB, activeTab: index });
-
   const containerRef = useRef(null);
   const handleScroll = () => {
     const headlines = containerRef.current.querySelectorAll('[data-test="burger-ingredients-headline"]');
@@ -84,6 +95,7 @@ const Items = memo(() => {
     }
   };
   const { headline, items, components } = styles;
+
 
   return (
     <ul className={ components } ref={ containerRef } onScroll={ handleScroll }>
@@ -109,6 +121,7 @@ const Items = memo(() => {
 
 
 const Item = memo(({ ingredient }) => {
+  const countIngredient = useSelector(store => store.ingredientsReducer.quantities[ingredient.type][ingredient._id])
   const { image, name, price } = ingredient;
   const { item, digits, img, textDigits, itemsDescription } = styles;
   const dispatch = useDispatch();
@@ -121,10 +134,15 @@ const Item = memo(({ ingredient }) => {
       type: OPEN_POPUP
     })
   };
+  const [,dragRef] = useDrag({
+    type: 'ingredient',
+    item: ingredient
+  })
 
 
   return (
-    <li className={ item } onClick={() => { getIngredientInformation() }}>
+    <li className={ item } onClick={ getIngredientInformation } ref={dragRef}>
+      {countIngredient ? <Counter count={ countIngredient } /> : null}
       <img className={ img } src={ image } alt={ name } />
       <div className={ digits }>
         <p className={ textDigits }>{ price }</p>

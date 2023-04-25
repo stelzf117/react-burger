@@ -7,7 +7,9 @@ import {
   OPEN_POPUP,
   DELETE_VIEWED_iNGREDIENT,
   CLOSE_POPUP,
-  SET_ACTIVE_TAB
+  SET_ACTIVE_TAB,
+  INCREMENT_INGREDIENT_COUNTER,
+  DECREMENT_INGREDIENT_COUNTER,
 } from "../actions/ingredients";
 
 const initialState = {
@@ -25,6 +27,11 @@ const initialState = {
     bun: [],
     main: [],
     sauce: [],
+  },
+  quantities: {
+    bun: {},
+    main: {},
+    sauce: {},
   }
 }
 
@@ -87,6 +94,52 @@ export const ingredientsReducer = (state = initialState, action) => {
       return {
         ...state,
         activeTab: action.activeTab
+      }
+    }
+    case INCREMENT_INGREDIENT_COUNTER: {
+      const bunValue = Object.values(state.quantities.bun)[0];
+      const { _id, type } = action.ingredient;
+      if(type === 'bun' && state.quantities[type][_id] > 0) {
+        return {...state}
+      } 
+      if (type === 'bun' && bunValue !== action._id && bunValue
+      ) {
+        return {
+          ...state,
+          quantities: {
+            ...state.quantities,
+            [type]: {
+              [_id]: 1
+            }
+          }
+        }
+      }
+
+      const updatedQuantities = {
+        ...state.quantities,
+        [type]: {
+          ...state.quantities[type],
+          [_id]: (state.quantities[type][_id] || 0) + 1
+        }
+      }
+      return {
+        ...state,
+        quantities: updatedQuantities
+      }
+    }
+    case DECREMENT_INGREDIENT_COUNTER: {
+      const { _id, type } = action.ingredient;
+      const currentValue = state.quantities[type][_id] || 0
+      const updatedQuantities = {
+        ...state.quantities,
+        [type]: {
+          ...state.quantities[type],
+          [_id]: currentValue > 0 ? currentValue - 1 : 0
+        }
+      };
+      return {
+        ...state,
+        quantities: updatedQuantities
       }
     }
     default: {
