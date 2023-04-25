@@ -10,7 +10,8 @@ import {
   CLOSE_POPUP_ORDER,
   UPDATE_BUN,
   ADD_INGREDIENT,
-  DELETE_INGREDIENT
+  DELETE_INGREDIENT,
+  CHANGE_INGREDIENT_INDEX,
 } from '../actions/constructor';
 
 const initialState = {
@@ -95,7 +96,36 @@ export const constructorReducer = (state = initialState, action) => {
     }
     case DELETE_INGREDIENT: {
       const index = action.ingredient.index;
-      const newIngredients = state.ingredients.filter(ingredient => ingredient.index !== index);
+      const filtredIngredients = state.ingredients.filter(ingredient => ingredient.index !== index);
+      const sortedIngredients = filtredIngredients.map((ingredient, index) => {
+        return {
+          ...ingredient,
+          index: index
+        }
+      })
+      return {
+        ...state,
+        ingredients: sortedIngredients
+      }
+    }
+    case CHANGE_INGREDIENT_INDEX: {
+      const itemIndex = action.item.index;
+      const ingredientIndex = action.ingredient.index;
+      const newIngredients = state.ingredients.map((ingredient, index) => {
+        if (index === itemIndex) {
+          return {
+            ...ingredient,
+            index: ingredientIndex
+          }
+        } else if (index === ingredientIndex) {
+          return {
+            ...ingredient,
+            index: itemIndex
+          }
+        } else {
+          return ingredient;
+        }
+      });
       return {
         ...state,
         ingredients: newIngredients

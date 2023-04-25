@@ -11,10 +11,10 @@ import { ingredientType } from '../../utils/types';
 import { useSelector, useDispatch } from 'react-redux';
 import updateTotalPrice from '../../services/middleware/totalPrice';
 import getOrderDetails from '../../services/middleware/order-details'
-import { CLOSE_POPUP_ORDER, DELETE_ORDER_NUMBER, ADD_INGREDIENT, UPDATE_BUN, DELETE_INGREDIENT } from '../../services/actions/constructor';
+import { CLOSE_POPUP_ORDER, DELETE_ORDER_NUMBER, ADD_INGREDIENT, UPDATE_BUN, DELETE_INGREDIENT, CHANGE_INGREDIENT_INDEX } from '../../services/actions/constructor';
 import { INCREMENT_INGREDIENT_COUNTER, DECREMENT_INGREDIENT_COUNTER } from '../../services/actions/ingredients';
 // DND
-import { useDrop } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
 
 const BurgerConstructor = memo(() => {
   const { popupVisible, ingredients } = useSelector(store => store.constructorReducer);
@@ -24,8 +24,8 @@ const BurgerConstructor = memo(() => {
     dispatch({ type: DELETE_ORDER_NUMBER });
   }
   const index = ingredients.length;
-  const addIngredient = item => dispatch({ type: ADD_INGREDIENT, ingredient: item, index: index })
-  const updateBun = item => dispatch({ type: UPDATE_BUN, bun: item })
+  const addIngredient = item => dispatch({ type: ADD_INGREDIENT, ingredient: item, index: index });
+  const updateBun = item => dispatch({ type: UPDATE_BUN, bun: item });
   const incrementIngredientCounter = item => dispatch({ type: INCREMENT_INGREDIENT_COUNTER, ingredient: item });
   const [{}, dropRef] = useDrop({
     accept: 'ingredient',
@@ -66,6 +66,8 @@ const Bun = memo(({ textSide, side }) => {
   const { name, price, image } = useSelector(store => store.constructorReducer.bun)
   const { bap } = styles;
   return (
+
+
     <div className={ bap }>
       <ConstructorElement
         type={ side }
@@ -85,11 +87,14 @@ Bun.propTypes = {
 
 const Items = memo(() => {
   const ingredients = useSelector(store => store.constructorReducer.ingredients);
+  const sortedIngredients = ingredients.sort((a, b) => a.index - b.index);
   const { items } = styles;
+
+
   return(
     <ul className={items}>
       {
-         ingredients.map(( ingredient, index ) => (
+        sortedIngredients.map(( ingredient, index ) => (
           <Item key={`${ index }`}
             ingredient={ ingredient }
           />
@@ -101,17 +106,32 @@ const Items = memo(() => {
 
 const Item = memo(({ ingredient }) => {
   const dispatch = useDispatch();
-  const handleDelete= () => {
-    dispatch({ type: DECREMENT_INGREDIENT_COUNTER, ingredient: ingredient })
-    dispatch({ type: DELETE_INGREDIENT, ingredient: ingredient })
+  const handleDelete = () => {
+    dispatch({ type: DECREMENT_INGREDIENT_COUNTER, ingredient: ingredient });
+    dispatch({ type: DELETE_INGREDIENT, ingredient: ingredient });
+  }
+  const changeIngredientIndex = (item, ingredient) => {
+    dispatch({ type: CHANGE_INGREDIENT_INDEX, ingredient: ingredient, item: item })
   }
 
+  const [,dragRef] = useDrag({
+    type: 'ingredientIndex',
+    item: ingredient,
+  })
+  const [{}, dropRef] = useDrop({
+    accept: 'ingredientIndex',
+    drop(item) {
+      changeIngredientIndex(item, ingredient);
+    }
+  })
   const { name, price, image } = ingredient;
   const { item, element } = styles;
+
+
   return (
-    <li className={ item }>
+    <li className={ item } ref={dragRef}>
       <DragIcon />
-      <div className={ element }>
+      <div className={ element } ref={dropRef}>
       <ConstructorElement
         text={ name }
         price={ price }
@@ -137,8 +157,9 @@ const Order = memo(() => {
     dispatch(updateTotalPrice())
   },
   [ ingredients, bun ] )
-
   const { order, total1, digits } = styles;
+
+
   return (
     <div className={ order }>
       <div className={ total1 }>
