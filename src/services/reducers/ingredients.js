@@ -10,6 +10,7 @@ import {
   SET_ACTIVE_TAB,
   INCREMENT_INGREDIENT_COUNTER,
   DECREMENT_INGREDIENT_COUNTER,
+  CLEAR_INGREDIENT_COUNTER,
 } from "../actions/ingredients";
 
 const initialState = {
@@ -140,6 +141,12 @@ export const ingredientsReducer = (state = initialState, action) => {
       return {
         ...state,
         quantities: updatedQuantities
+      }
+    }
+    case CLEAR_INGREDIENT_COUNTER: {
+      return {
+        ...state,
+        quantities: initialState.quantities
       }
     }
     default: {

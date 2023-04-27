@@ -11,7 +11,7 @@ import { ingredientType } from '../../utils/types';
 import { useSelector, useDispatch } from 'react-redux';
 import updateTotalPrice from '../../services/middleware/totalPrice';
 import { popupOnClose, addIngredient, updateBun, handleItemDelete, changeIngredientIndex, popupOpen } from '../../services/actions/constructor';
-import { incrementIngredientCounter, handleItemDecrement } from '../../services/actions/ingredients';
+import { incrementIngredientCounter, handleItemDecrement, clearIngredientCounter } from '../../services/actions/ingredients';
 // DND
 import { useDrag, useDrop } from 'react-dnd';
 
@@ -160,7 +160,10 @@ const Order = memo(() => {
         htmlType="button"
         type="primary"
         size="large"
-        onClick={()=> popupOpen(dispatch) }
+        onClick={()=> {
+          popupOpen(dispatch); 
+          clearIngredientCounter(dispatch);
+        }}
       >
         {isLoading ? 'загрузка...' :'Оформить заказ'}
       </Button>

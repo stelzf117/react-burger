@@ -9,6 +9,7 @@ export const CLOSE_POPUP = 'CLOSE_POPUP';
 export const SET_ACTIVE_TAB = 'SET_ACTIVE_TAB';
 export const INCREMENT_INGREDIENT_COUNTER = 'INCREMENT_INGREDIENT_COUNTER';
 export const DECREMENT_INGREDIENT_COUNTER = 'DECREMENT_INGREDIENT_COUNTER';
+export const CLEAR_INGREDIENT_COUNTER = 'CLEAR_INGREDIENT_COUNTER';
 
 export const incrementIngredientCounter = (item, dispatch) => dispatch({ type: INCREMENT_INGREDIENT_COUNTER, ingredient: item });
 export const handleItemDecrement = (ingredient, dispatch) => {
@@ -27,5 +28,5 @@ export const getIngredientInformation = (dispatch, ingredient) => {
     type: OPEN_POPUP
   })
 };
-export const setActiveTab = (dispatch, index) => dispatch({ type: SET_ACTIVE_TAB, activeTab: index }); 
-// export 
+export const setActiveTab = (dispatch, index) => dispatch({ type: SET_ACTIVE_TAB, activeTab: index });
+export const clearIngredientCounter = dispatch => dispatch({ type: CLEAR_INGREDIENT_COUNTER })
