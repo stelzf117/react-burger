@@ -12,6 +12,7 @@ import {
   ADD_INGREDIENT,
   DELETE_INGREDIENT,
   CHANGE_INGREDIENT_INDEX,
+  CLEAR_INGREDIENTS,
 } from '../actions/constructor';
 
 const initialState = {
@@ -77,6 +78,13 @@ export const constructorReducer = (state = initialState, action) => {
         popupVisible: false
       }
     }
+    case CLEAR_INGREDIENTS: {
+      return {
+        ...state,
+        ingredients: [],
+        bun: initialState.bun
+      }
+    }
     case UPDATE_BUN: {
       return {
         ...state,
@@ -84,10 +92,11 @@ export const constructorReducer = (state = initialState, action) => {
       }
     }
     case ADD_INGREDIENT: {
-      const ingredient = action.ingredient;
+      const { ingredient, key } = action;
       const ingredientWithIndex = {
         ...ingredient,
-        index: action.index
+        index: action.index,
+        key: key
       }
       return {
         ...state,

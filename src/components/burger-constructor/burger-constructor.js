@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef } from 'react';
+import { memo, useEffect } from 'react';
 import { DragIcon, ConstructorElement, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../../styles/burger-constructor.module.css'
 // modal
@@ -10,28 +10,21 @@ import { ingredientType } from '../../utils/types';
 // redux
 import { useSelector, useDispatch } from 'react-redux';
 import updateTotalPrice from '../../services/middleware/totalPrice';
-import getOrderDetails from '../../services/middleware/order-details'
-import { CLOSE_POPUP_ORDER, DELETE_ORDER_NUMBER, ADD_INGREDIENT, UPDATE_BUN, DELETE_INGREDIENT, CHANGE_INGREDIENT_INDEX } from '../../services/actions/constructor';
-import { INCREMENT_INGREDIENT_COUNTER, DECREMENT_INGREDIENT_COUNTER } from '../../services/actions/ingredients';
+import { popupOnClose, addIngredient, updateBun, handleItemDelete, changeIngredientIndex, popupOpen } from '../../services/actions/constructor';
+import { incrementIngredientCounter, handleItemDecrement } from '../../services/actions/ingredients';
 // DND
 import { useDrag, useDrop } from 'react-dnd';
+
 
 const BurgerConstructor = memo(() => {
   const { popupVisible, ingredients } = useSelector(store => store.constructorReducer);
   const dispatch = useDispatch()
-  const popupOnClose = () => {
-    dispatch({ type: CLOSE_POPUP_ORDER });
-    dispatch({ type: DELETE_ORDER_NUMBER });
-  }
   const index = ingredients.length;
-  const addIngredient = item => dispatch({ type: ADD_INGREDIENT, ingredient: item, index: index });
-  const updateBun = item => dispatch({ type: UPDATE_BUN, bun: item });
-  const incrementIngredientCounter = item => dispatch({ type: INCREMENT_INGREDIENT_COUNTER, ingredient: item });
   const [{}, dropRef] = useDrop({
     accept: 'ingredient',
     drop(item) {
-      item.type === 'bun' ? updateBun(item) : addIngredient(item);
-      incrementIngredientCounter(item);
+      item.type === 'bun' ? updateBun(item, dispatch) : addIngredient(item, index, dispatch);
+      incrementIngredientCounter(item, dispatch);
     }
   })
   const { wrapper, inner } = styles;
@@ -48,7 +41,7 @@ const BurgerConstructor = memo(() => {
     {/* portal */}
       {
         popupVisible &&
-        <Modal onClose={ popupOnClose }>
+        <Modal onClose={()=> popupOnClose(dispatch) }>
           <OrderDetails />
         </Modal>
       }
@@ -92,10 +85,10 @@ const Items = memo(() => {
 
 
   return(
-    <ul className={items}>
+    <ul className={ items }>
       {
-        sortedIngredients.map(( ingredient, index ) => (
-          <Item key={`${ index }`}
+        sortedIngredients.map(( ingredient ) => (
+          <Item key={`${ ingredient.key }`}
             ingredient={ ingredient }
           />
         ))
@@ -106,13 +99,7 @@ const Items = memo(() => {
 
 const Item = memo(({ ingredient }) => {
   const dispatch = useDispatch();
-  const handleDelete = () => {
-    dispatch({ type: DECREMENT_INGREDIENT_COUNTER, ingredient: ingredient });
-    dispatch({ type: DELETE_INGREDIENT, ingredient: ingredient });
-  }
-  const changeIngredientIndex = (item, ingredient) => {
-    dispatch({ type: CHANGE_INGREDIENT_INDEX, ingredient: ingredient, item: item })
-  }
+
 
   const [,dragRef] = useDrag({
     type: 'ingredientIndex',
@@ -121,7 +108,7 @@ const Item = memo(({ ingredient }) => {
   const [{}, dropRef] = useDrop({
     accept: 'ingredientIndex',
     drop(item) {
-      changeIngredientIndex(item, ingredient);
+      changeIngredientIndex(item, ingredient, dispatch);
     }
   })
   const { name, price, image } = ingredient;
@@ -136,7 +123,10 @@ const Item = memo(({ ingredient }) => {
         text={ name }
         price={ price }
         thumbnail={ image }
-        handleClose={ handleDelete }
+        handleClose={ ()=> {
+          handleItemDelete(ingredient, dispatch)
+          handleItemDecrement(ingredient, dispatch)
+          } }
       />
       </div>
     </li>
@@ -150,8 +140,8 @@ Item.propTypes = {
 
 const Order = memo(() => {
   const { totalPrice, ingredients, bun } = useSelector(store => store.constructorReducer);
+  const isLoading = useSelector(store => store.constructorReducer.orderRequest)
   const dispatch = useDispatch();
-  const popupOpen = () => dispatch(getOrderDetails());
 
   useEffect(() => {
     dispatch(updateTotalPrice())
@@ -170,9 +160,9 @@ const Order = memo(() => {
         htmlType="button"
         type="primary"
         size="large"
-        onClick={ popupOpen }
+        onClick={()=> popupOpen(dispatch) }
       >
-        Оформить заказ
+        {isLoading ? 'загрузка...' :'Оформить заказ'}
       </Button>
     </div>
   )

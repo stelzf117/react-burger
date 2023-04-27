@@ -3,10 +3,12 @@ import {
   GET_INGREDIENTS_SUCCESS,
   GET_INGREDIENTS_FAILED, 
 } from "../actions/ingredients";
+import { BASE_URL } from '../../utils/constants';
+import { checkResponse } from '../../utils/checkResponse'
 
 
 const sortData = data => {
-  const criteria =  ['bun', 'sauce', 'main'];
+  const criteria = ['bun', 'sauce', 'main'];
   const result = {
     bun: [],
     sauce: [],
@@ -24,14 +26,9 @@ export default function getIngredients() {
     dispatch({
       type: GET_INGREDIENTS
     })
-    const url = 'https://norma.nomoreparties.space/api/ingredients';
+    const url = `${BASE_URL}/ingredients`;
     const res = await fetch(url)
-      .then(respond => {
-        if (respond.ok) {
-          return respond.json();
-        }
-        else { Promise.reject(`Ошибка: ${res.status}`) }
-      })
+      .then(respond => checkResponse(respond))
       .then(object => {
         const sortedData = sortData(object.data);
         dispatch({

@@ -1,4 +1,6 @@
-import { GET_ORDER_DETAILS, GET_ORDER_DETAILS_SUCCESS, GET_ORDER_DETAILS_FAILED, OPEN_POPUP_ORDER } from '../actions/constructor';
+import { GET_ORDER_DETAILS, GET_ORDER_DETAILS_SUCCESS, GET_ORDER_DETAILS_FAILED, OPEN_POPUP_ORDER, CLEAR_INGREDIENTS } from '../actions/constructor';
+import { BASE_URL } from '../../utils/constants';
+import { checkResponse } from '../../utils/checkResponse';
 
 
 const getIngredientsId = ( ingredients, bun ) => {
@@ -13,7 +15,7 @@ const getIngredientsId = ( ingredients, bun ) => {
 
 export default function getOrderDetails() {
   return async (dispatch, getState) => {
-    const url = 'https://norma.nomoreparties.space/api/orders';
+    const url = `${BASE_URL}/orders`;
     const { ingredients, bun } = getState().constructorReducer;
     const ingredientsId = getIngredientsId(ingredients, bun);
     const body = JSON.stringify(ingredientsId)
@@ -29,12 +31,7 @@ export default function getOrderDetails() {
         headers: headers,
         body: body
       })
-        .then(respond => {
-          if (respond.ok) {
-            return respond.json();
-          }
-          else { Promise.reject(`Ошибка: ${respond.status}`) }
-        })
+        .then(respond => checkResponse(respond))
         .then(object => {
           dispatch({ 
             type: GET_ORDER_DETAILS_SUCCESS,
@@ -44,6 +41,9 @@ export default function getOrderDetails() {
         .then(() => {
           dispatch({
             type: OPEN_POPUP_ORDER
+          })
+          dispatch({
+            type: CLEAR_INGREDIENTS
           })
         })
         .catch(e => {

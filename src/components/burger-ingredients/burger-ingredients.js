@@ -7,19 +7,16 @@ import { ingredientType } from '../../utils/types';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 import getIngredients from '../../services/middleware/ingredients';
-import { GET_INGREDIENT_INFORMATION, OPEN_POPUP, CLOSE_POPUP, DELETE_VIEWED_iNGREDIENT, SET_ACTIVE_TAB } from '../../services/actions/ingredients';
+import { getIngredientInformation, popupOnClose, setActiveTab } from '../../services/actions/ingredients';
 // DND
 import { useDrag } from 'react-dnd';
 
 
 const BurgerIngridients = memo(() => {
   const { ingredientsSuccess } = useSelector(store => store.ingredientsReducer);
-  const dispatch = useDispatch();
   const { popupVisible } = useSelector(store => store.ingredientsReducer);
-  const popupOnClose = () => { 
-    dispatch({ type: CLOSE_POPUP })
-    dispatch({ type: DELETE_VIEWED_iNGREDIENT })
-  }
+  const dispatch = useDispatch();
+
 
   useEffect(() => {
     dispatch(getIngredients());
@@ -37,7 +34,7 @@ const BurgerIngridients = memo(() => {
 
         {/* portal */}
         {popupVisible && (
-          <Modal onClose={ popupOnClose }>
+          <Modal onClose={()=> popupOnClose(dispatch) }>
             <IngredientDetails />
           </Modal>
         )}
@@ -56,13 +53,13 @@ const Tabs = memo(() => {
   const { activeTab, tabs } = useSelector(store => store.ingredientsReducer);
   const current = tabs[activeTab];
   const dispatch = useDispatch();
-  const setActiveTab = index => dispatch({ type: SET_ACTIVE_TAB, activeTab: index });
+  
 
   return (
     <div className={styles.tabs}>
-      <Tab value="one" active={current === 'one'} onClick={() => setActiveTab(0)}>Булки</Tab>
-      <Tab value="two" active={current === 'two'} onClick={ () => setActiveTab(1) }>Соусы</Tab>
-      <Tab value="three" active={current === 'three'} onClick={ () => setActiveTab(2) }>Начинки</Tab>
+      <Tab value="one" active={current === 'one'} onClick={() => setActiveTab(dispatch, 0)}>Булки</Tab>
+      <Tab value="two" active={current === 'two'} onClick={ () => setActiveTab(dispatch, 1) }>Соусы</Tab>
+      <Tab value="three" active={current === 'three'} onClick={ () => setActiveTab(dispatch, 2) }>Начинки</Tab>
     </div>
   )
 });
@@ -71,17 +68,8 @@ const Tabs = memo(() => {
 const Items = memo(() => {
   // store
   const { ingredients, headlines, criteria, activeTab } = useSelector(store => store.ingredientsReducer);
-  const ingredientsConstrucor = useSelector(store => store.constructorReducer.ingredients)
-  
-  // counter
-  const ingredientsCounter = () => {
-    
-  }
-
-
   // scroll
   const dispatch = useDispatch();
-  const setActiveTab = index => dispatch({ type: SET_ACTIVE_TAB, activeTab: index });
   const containerRef = useRef(null);
   const handleScroll = () => {
     const headlines = containerRef.current.querySelectorAll('[data-test="burger-ingredients-headline"]');
@@ -91,7 +79,7 @@ const Items = memo(() => {
     const minDistance = Math.min(...distances);
     const index = distances.indexOf(minDistance);
     if (activeTab !== index) {
-      setActiveTab(index);
+      setActiveTab(dispatch, index);
     }
   };
   const { headline, items, components } = styles;
@@ -125,15 +113,6 @@ const Item = memo(({ ingredient }) => {
   const { image, name, price } = ingredient;
   const { item, digits, img, textDigits, itemsDescription } = styles;
   const dispatch = useDispatch();
-  const getIngredientInformation = () => {
-    dispatch({
-      type: GET_INGREDIENT_INFORMATION,
-      ingredient: ingredient
-    });
-    dispatch({
-      type: OPEN_POPUP
-    })
-  };
   const [,dragRef] = useDrag({
     type: 'ingredient',
     item: ingredient
@@ -141,7 +120,7 @@ const Item = memo(({ ingredient }) => {
 
 
   return (
-    <li className={ item } onClick={ getIngredientInformation } ref={dragRef}>
+    <li className={ item } onClick={()=> getIngredientInformation(dispatch, ingredient) } ref={dragRef}>
       {countIngredient ? <Counter count={ countIngredient } /> : null}
       <img className={ img } src={ image } alt={ name } />
       <div className={ digits }>
