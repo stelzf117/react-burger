@@ -1,48 +1,47 @@
-import { memo, useState } from 'react';
+import { memo, useEffect } from 'react';
 import { DragIcon, ConstructorElement, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../../styles/burger-constructor.module.css'
+// modal
 import OrderDetails from '../order-details/order-details';
-import itemImage from '../../images/item.png';
 import Modal from '../modal/modal';
-import { ingredientType } from '../../utils/types';
+// types
 import PropTypes from 'prop-types';
+import { ingredientType } from '../../utils/types';
+// redux
+import { useSelector, useDispatch } from 'react-redux';
+import updateTotalPrice from '../../services/middleware/totalPrice';
+import { popupOnClose, addIngredient, updateBun, handleItemDelete, changeIngredientIndex, popupOpen } from '../../services/actions/constructor';
+import { incrementIngredientCounter, handleItemDecrement, clearIngredientCounter } from '../../services/actions/ingredients';
+// DND
+import { useDrag, useDrop } from 'react-dnd';
 
 
-const BurgerConstructor = memo(({ bun, ingredient }) => {
-  const [ state, setState ] = useState({
-    buns: {
-      top: {
-        side: 'top',
-        text: 'Краторная булка N-200i (верх)',
-        price: 200,
-        image: itemImage
-      },
-      bottom: {
-        side: 'bottom',
-        text: 'Краторная булка N-200i (низ)',
-        price: 200,
-        image: itemImage
-      } 
-    },
-    popupVisible: false
-  });
-  const popupClose = () => { setState( prevState => ({ ...prevState, popupVisible: false }))};
-  const popupOpen = () => { setState( prevState => ({ ...prevState, popupVisible: true }))};
+const BurgerConstructor = memo(() => {
+  const { popupVisible, ingredients } = useSelector(store => store.constructorReducer);
+  const dispatch = useDispatch()
+  const index = ingredients.length;
+  const [{}, dropRef] = useDrop({
+    accept: 'ingredient',
+    drop(item) {
+      item.type === 'bun' ? updateBun(item, dispatch) : addIngredient(item, index, dispatch);
+      incrementIngredientCounter(item, dispatch);
+    }
+  })
   const { wrapper, inner } = styles;
 
 
   return (
     <section className={ wrapper }>
-     <div className={ inner }>
-       <Bun bun={ state.buns.top } />
-       <Items />
-       <Bun bun={ state.buns.bottom } />
-       <Order popupOpen={ popupOpen } total={ 0 } />
+     <div className={ inner } ref={ dropRef }>
+        <Bun side='top' textSide='(верх)' />
+        <Items />
+        <Bun side='bottom' textSide='(низ)' />
+        <Order />
      </div>
     {/* portal */}
       {
-        state.popupVisible && 
-        <Modal onClose={ popupClose }>
+        popupVisible &&
+        <Modal onClose={()=> popupOnClose(dispatch) }>
           <OrderDetails />
         </Modal>
       }
@@ -51,24 +50,22 @@ const BurgerConstructor = memo(({ bun, ingredient }) => {
   )
 })
 
-BurgerConstructor.propTypes = {
-  bun: ingredientType,
-  ingredient: ingredientType
-}
 
 export default BurgerConstructor;
 // ------------------------------
 
 
-const Bun = memo(({ bun }) => {
-  const { side, text, price, image } = bun;
+const Bun = memo(({ textSide, side }) => {
+  const { name, price, image } = useSelector(store => store.constructorReducer.bun)
   const { bap } = styles;
   return (
+
+
     <div className={ bap }>
       <ConstructorElement
         type={ side }
         isLocked={ true }
-        text={ text }
+        text={ `${name} ${textSide ? textSide : 'ㅤ'}` }
         price={ price }
         thumbnail={ image }
       />
@@ -76,29 +73,23 @@ const Bun = memo(({ bun }) => {
   )
 })
 
-// Bun.propTypes = {
-//   bun: ingredientType
-// }
+Bun.propTypes = {
+  textSide: PropTypes.oneOf(['(верх)', '(низ)']),
+  side: PropTypes.oneOf(['top', 'bottom']).isRequired
+}
 
-const Items = memo( ({ ingredient }) => {
-  const [ state, setState ] = useState({
-    items: [
-            { text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png' },
-            { text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png' },
-            { text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png' },
-            { text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png' },
-            { text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png' },
-            { text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png' },
-            { text: 'Мясо бессмертных моллюсков Protostomia', price: 1337, image: 'https://code.s3.yandex.net/react/code/meat-02.png' }
-           ]
-  })
+const Items = memo(() => {
+  const ingredients = useSelector(store => store.constructorReducer.ingredients);
+  const sortedIngredients = ingredients.sort((a, b) => a.index - b.index);
   const { items } = styles;
+
+
   return(
-    <ul className={items}>
+    <ul className={ items }>
       {
-        state.items.map(( item, index ) => (
-          <Item key={`${ index }`}
-          ingredient={ item }
+        sortedIngredients.map(( ingredient ) => (
+          <Item key={`${ ingredient.key }`}
+            ingredient={ ingredient }
           />
         ))
       }
@@ -106,47 +97,76 @@ const Items = memo( ({ ingredient }) => {
   )
 })
 
-Items.propTypes = {
-  ingredient: ingredientType
-}
-
-
 const Item = memo(({ ingredient }) => {
-  const { text, price, image } = ingredient;
+  const dispatch = useDispatch();
+
+
+  const [,dragRef] = useDrag({
+    type: 'ingredientIndex',
+    item: ingredient,
+  })
+  const [{}, dropRef] = useDrop({
+    accept: 'ingredientIndex',
+    drop(item) {
+      changeIngredientIndex(item, ingredient, dispatch);
+    }
+  })
+  const { name, price, image } = ingredient;
   const { item, element } = styles;
+
+
   return (
-    <li className={ item }>
-    <DragIcon />
-      <div className={ element }>
+    <li className={ item } ref={dragRef}>
+      <DragIcon />
+      <div className={ element } ref={dropRef}>
       <ConstructorElement
-      text={ text }
-      price={ price }
-      thumbnail={ image }
+        text={ name }
+        price={ price }
+        thumbnail={ image }
+        handleClose={ ()=> {
+          handleItemDelete(ingredient, dispatch)
+          handleItemDecrement(ingredient, dispatch)
+          } }
       />
       </div>
     </li>
   )
 })
 
-// Item.propTypes = {
-//   ingredient: ingredientType
-// }
+Item.propTypes = {
+  ingredient: ingredientType
+}
 
 
-const Order = memo(({ total, popupOpen }) => {
+const Order = memo(() => {
+  const { totalPrice, ingredients, bun } = useSelector(store => store.constructorReducer);
+  const isLoading = useSelector(store => store.constructorReducer.orderRequest)
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(updateTotalPrice())
+  },
+  [ ingredients, bun ] )
   const { order, total1, digits } = styles;
+
+
   return (
     <div className={ order }>
       <div className={ total1 }>
-        <p className={ digits }>{ total }</p>
+        <p className={ digits }>{ totalPrice }</p>
         <CurrencyIcon />
       </div>
-      <Button onClick={ popupOpen } htmlType="button" type="primary" size="large">Оформить заказ</Button>
+      <Button 
+        htmlType="button"
+        type="primary"
+        size="large"
+        onClick={()=> {
+          popupOpen(dispatch); 
+          clearIngredientCounter(dispatch);
+        }}
+      >
+        {isLoading ? 'загрузка...' :'Оформить заказ'}
+      </Button>
     </div>
   )
 })
-
-Order.propTypes = {
-  total: PropTypes.number.isRequired,
-  popupOpen: PropTypes.func.isRequired
-}

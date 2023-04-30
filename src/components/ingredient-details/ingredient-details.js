@@ -1,9 +1,10 @@
 import { memo } from "react";
 import styles from '../../styles/ingredient-details.module.css'
 import { ingredientType } from "../../utils/types";
+import { useSelector } from "react-redux";
 
-const IngredientDetails = memo(({ ingredient }) => {
-  const { image_large, name, calories, carbohydrates, proteins, fat } = ingredient;
+const IngredientDetails = memo(() => {
+  const { image_large, name, calories, carbohydrates, proteins, fat } = useSelector(store => store.ingredientsReducer.viewedIngredient);
   const { title, inner, header, img, description, list, item, span } = styles;
   return (
     <div className={ inner }>
@@ -30,9 +31,5 @@ const IngredientDetails = memo(({ ingredient }) => {
     </div>
   )
 })
-
-IngredientDetails.propTypes = {
-  ingredient: ingredientType.isRequired
-}
 
 export default IngredientDetails;

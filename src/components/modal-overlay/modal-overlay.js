@@ -7,7 +7,10 @@ const ModalOverlay = memo(({ onClose, children }) => {
   return (
     <div className={ wrapper }>
       { children }
-      <div className={ overlay } onClick={ onClose } />
+      <div 
+        className={ overlay } 
+        onClick={ onClose } 
+      />
     </div>
   )
 })
